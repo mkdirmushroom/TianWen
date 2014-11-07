@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#eeeeee</color>
+    <color name="Blue">#5677fc</color>
+    <color name="swipe_color_1">#00bcd4</color>
+    <color name="swipe_color_2">#99CC00</color>
+    <color name="swipe_color_3">#FFBB33</color>
+    <color name="swipe_color_4">#FF4444</color>
+    <color name="actionbar_bg">#3f51b5</color>
+    <color name="textcolor">#666</color>
+    <color name="notice_color">#d01716</color>
+    <color name="white">#ffffffff</color>
+    <color name="pink">#e91e63</color>
+    <color name="Teal">#009688</color>
+    <color name="Cyan">#00bcd4</color>
+
+
+
+</resources>

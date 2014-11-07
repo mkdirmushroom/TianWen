@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <PreferenceCategory
+        android:key="user"
+        android:title="@string/title_user">
+        <Preference
+            android:key="pref_login"
+            android:title="@string/title_login"/>
+        <Preference
+            android:key="pref_deleteCache"
+            android:title="@string/title_delete" />
+        <Preference
+            android:key="pref_signOut"
+            android:title="注销"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:textSize="13dip"
+        android:title="更多">
+        <Preference
+            android:key="pref_about"
+            android:title="关于我们" />
+        <Preference
+            android:summary="1.9.0 "
+            android:title="版本信息"></Preference>
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <PreferenceCategory
+        android:textSize="13dip"
+        android:title="个人中心">
+        <Preference
+            android:key="center_userName"
+            android:title="昵称"
+            android:summary="qiugang"/>
+        <Preference
+            android:key="center_studentId"
+            android:title="学号"
+            android:summary="12101020513"/>
+        <Preference
+            android:key="center_qq"
+            android:title="QQ"
+            android:summary="329148324"/>
+        <Preference
+            android:key="center_email"
+            android:title="thisisqg@gmail.om" />
+    </PreferenceCategory>
+</PreferenceScreen>

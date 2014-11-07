@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="search_mode">
+        <item>内容</item>
+        <item>编号</item>
+    </string-array>
+</resources>

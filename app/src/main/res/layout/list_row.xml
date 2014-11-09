@@ -45,11 +45,10 @@
 
     <TextView
         android:id="@+id/listrow_imageViwe_done"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30"
+        android:layout_height="30"
         android:layout_alignParentRight="true"
-        android:background="@drawable/card_bg_play_normal"
-        android:text="done"
+        android:background="@drawable/checkmark_round"
         android:textColor="@color/pink" />
 
 </RelativeLayout>

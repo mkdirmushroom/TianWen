@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -27,6 +28,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.drakeet.materialdialog.MaterialDialog;
 import me.jeremy.ccst.R;
 import me.jeremy.ccst.api.Api;
 import me.jeremy.ccst.api.TypeParams;
@@ -92,6 +94,8 @@ public class QuestionPager extends FragmentActivity {
      */
     private PagerAdapter mPagerAdapter;
 
+    private int flag = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,13 +121,13 @@ public class QuestionPager extends FragmentActivity {
 
             @Override
             public void onPageScrolled(int i, float v, int i2) {
-                if (i2 == 0) {
-                    if (maxPosition != -1) {
-                        if (position == maxPosition) {
-                            ToastUtils.showShort("已经是最后一题啦");
+                    if (i2 == 0) {
+                        if (maxPosition != -1) {
+                            if (position == maxPosition) {
+                                mMenu.findItem(R.id.action_save).setVisible(true);
+                            }
                         }
                     }
-                }
             }
 
             @Override
@@ -133,6 +137,9 @@ public class QuestionPager extends FragmentActivity {
 
             @Override
             public void onPageScrollStateChanged(int i) {
+                if (i == maxPosition) {
+//                    ToastUtils.showShort("最后一页");
+                }
 
             }
         });
@@ -163,7 +170,9 @@ public class QuestionPager extends FragmentActivity {
         @Override
         public Fragment getItem(int position) {
             String questionType = questions.get(position).getQuestionType();
+            if (position == questions.size() - 1) {
 
+            }
             if (TypeParams.QUESTION_FIELD.equals(questionType)) {
                 return new FiledFragment(questions.get(position), position + 1);
             } else if (TypeParams.QUESTION_CHOOSE_SINGEL.equals(questionType)) {
@@ -195,19 +204,19 @@ public class QuestionPager extends FragmentActivity {
                     protected Object doInBackground(Object... params) {
                         temple = gson.fromJson(response, type);
                         questionnaireDetailResponse = temple;
-                        questions.clear();
-                        for (QuestionResponse q : temple.getQuestions()) {
-                            questions.add(q);
-                        }
-                        maxPosition = questions.size() - 1;
                         return null;
                     }
 
                     @Override
                     protected void onPostExecute(Object o) {
                         super.onPostExecute(o);
+                        questions.clear();
+                        for (QuestionResponse q : temple.getQuestions()) {
+                            questions.add(q);
+                        }
+                        maxPosition = questions.size() - 1;
                         mPagerAdapter.notifyDataSetChanged();
-                        mMenu.findItem(R.id.action_qustionNums).setTitle(ParamsUtils.getQuestionNums(questions.size()));
+                        mActionBar.setTitle(ParamsUtils.getQuestionNums(questions.size()));
                     }
                 });
             }
@@ -249,6 +258,7 @@ public class QuestionPager extends FragmentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.question, menu);
         mMenu = menu;
+        mMenu.findItem(R.id.action_save).setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
 

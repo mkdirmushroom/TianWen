@@ -76,11 +76,14 @@ public class SearchActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_search);
         ActionBar mActionBar = getActionBar();
         mActionBar.setDisplayShowTitleEnabled(false);
         mActionBar.setDisplayHomeAsUpEnabled(false);
         mActionBar.setIcon(R.drawable.ic_arrow_back_white_36dp);
+        mActionBar.setDisplayShowHomeEnabled(true);
+
         mListView = (ListView) findViewById(R.id.search_listView);
         mEmptyView = (TextView) findViewById(R.id.search_emptyview);
         mAdapter = new QuestionnairesAdapter(this, questionnaireResponses);
@@ -93,6 +96,7 @@ public class SearchActivity extends BaseActivity {
                 if (questionnaireResponses.get(i).getDone()) {
                     Intent intent = new Intent(SearchActivity.this, QuestionPager.class);
                     intent.putExtra("QuestionnaireId", questionnaireResponses.get(i).getId() + "");
+                    questionnaireResponses.clear();
                     startActivity(intent);
                 } else {
                     ToastUtils.showShort("已经做过啦");
@@ -119,8 +123,7 @@ public class SearchActivity extends BaseActivity {
         int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_plate", null, null);
         View searchPlate = searchView.findViewById(searchPlateId);
         if (searchPlate != null) {
-            searchPlate.setBackground(getResources().getDrawable(R.drawable.edit_text));
-//            searchPlate.setBackgroundColor(getResources().getColor(R.color.Blue));
+            searchPlate.setBackground(getResources().getDrawable(R.drawable.textfield_focused));
             int searchTextId = searchPlate.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
             TextView searchText = (TextView) searchPlate.findViewById(searchTextId);
             if (searchText != null) {
@@ -279,11 +282,11 @@ public class SearchActivity extends BaseActivity {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (error.networkResponse.statusCode == 500) {
-                    ToastUtils.showShort("搜索条件选错了哦");
-                } else {
+//                if (error.networkResponse.statusCode == 500) {
+//                    ToastUtils.showShort("搜索条件选错了哦");
+//                } else {
                     ToastUtils.showShort("网络错误，请检查你的网络连接");
-                }
+//                }
             }
         };
     }

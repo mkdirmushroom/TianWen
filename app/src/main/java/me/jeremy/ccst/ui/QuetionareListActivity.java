@@ -222,6 +222,15 @@ public class QuetionareListActivity extends BaseActivity implements SwipeRefresh
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        questionnaires.clear();
+        page = 1;
+        loadData(page);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void onRefresh() {
         swipeRefreshLayout.setRefreshing(false);
         return;

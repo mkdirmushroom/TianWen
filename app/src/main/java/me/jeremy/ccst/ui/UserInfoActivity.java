@@ -57,7 +57,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
     private void initViewData() {
         userInfoResponse = UserUtils.getUserInfoResponse();
         userName.setText(userInfoResponse.getUserName());
-        studentId.setText(userInfoResponse.getId() + "");
+        studentId.setText(userInfoResponse.getStudentCode() + "");
         if (!TextUtils.isEmpty(userInfoResponse.getQq())) {
             qq.setText(userInfoResponse.getQq());
         } else {

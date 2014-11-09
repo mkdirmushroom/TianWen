@@ -136,7 +136,7 @@ public class LoginActivity extends BaseActivity {
                     protected void onPostExecute(Object o) {
                         super.onPostExecute(o);
                         progressDialog.dismiss();
-                        Log.d("data", response.getUserName() + "");
+                        Log.d("data", new Gson().toJson(response));
                         if (response.getId() != null) {
                             UserUtils.saveUserInfo(response);
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
@@ -157,12 +157,14 @@ public class LoginActivity extends BaseActivity {
             public void onErrorResponse(VolleyError error) {
                 progressDialog.dismiss();
                 ToastUtils.showShort("wait for a moment");
-                if (error.networkResponse.statusCode == 500) {
-                    Log.d("切换到备用服务器", "");
-                    executeRequest(new GsonRequest<UserInfoResponse>(Api.Host_ALIYUN + "login",
-                            jsonObject, UserInfoResponse.class, responseListener(), errorListener()));
+                if (error.networkResponse != null) {
+                    if (error.networkResponse.statusCode == 500) {
+                        Log.d("切换到备用服务器", "");
+                        executeRequest(new GsonRequest<UserInfoResponse>(Api.Host_ALIYUN + "login",
+                                jsonObject, UserInfoResponse.class, responseListener(), errorListener()));
+                    }
                 }
-               // ToastUtils.showShort("网络错误，请检查你的网络连接");
+               ToastUtils.showShort("网络错误，请检查你的网络连接");
             }
         };
     }

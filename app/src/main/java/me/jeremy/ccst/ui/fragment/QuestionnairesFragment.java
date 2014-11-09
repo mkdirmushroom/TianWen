@@ -48,6 +48,8 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
 
     private ListView listView;
 
+    private View mEmptyView;
+
     private QuestionnairesAdapter mAdapter;
 
     private Gson gson = new Gson();
@@ -70,11 +72,13 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
         View rootView = inflater.inflate(R.layout.fragment_questionnaires, container, false);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.questionnaires_swipeRefresh);
         listView = (ListView) rootView.findViewById(R.id.questionnaires_listView);
+        mEmptyView = rootView.findViewById(R.id.progress_fragment_qustionnaires);
         swipeRefreshLayout.setColorScheme(R.color.swipe_color_1, R.color.swipe_color_2, R.color.swipe_color_3,
                 R.color.swipe_color_4);
 
         swipeRefreshLayout.setOnRefreshListener(this);
         mAdapter = new QuestionnairesAdapter(getActivity(), questionnaires);
+        listView.setEmptyView(mEmptyView);
         listView.setAdapter(mAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -108,26 +112,30 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
             executeRequest(new MyStringRequest(Request.Method.GET, Api.Host_ALIYUN + "news/" + UserUtils
                     .getUserId(), responseListener(), errorListener()));
         } else {
-            if (!TextUtils.isEmpty(UserUtils.getCache("news"))) {
-                Log.d("news cache", UserUtils.getCache("news"));
-                List<QuestionnaireResponse> caches;
-                caches = gson.fromJson(UserUtils.getCache("news"), listType);
-                questionnaires.clear();
-                for (QuestionnaireResponse q : caches) {
-                    questionnaires.add(q);
-                }
-                mAdapter.notifyDataSetChanged();
-
-                swipeRefreshLayout.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                },3000);
-            }
-            ToastUtils.showShort("网络未连接，不能捡肥皂");
+            loadCache();
         }
 
+    }
+
+    private void loadCache() {
+        if (!TextUtils.isEmpty(UserUtils.getCache("news"))) {
+            Log.d("news cache", UserUtils.getCache("news"));
+            List<QuestionnaireResponse> caches;
+            caches = gson.fromJson(UserUtils.getCache("news"), listType);
+            questionnaires.clear();
+            for (QuestionnaireResponse q : caches) {
+                questionnaires.add(q);
+            }
+            mAdapter.notifyDataSetChanged();
+
+            swipeRefreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            },3000);
+        }
+        ToastUtils.showShort("网络未连接，不能捡肥皂");
     }
 
 
@@ -147,19 +155,23 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
                     @Override
                     protected void onPostExecute(Object o) {
                         super.onPostExecute(o);
-                        UserUtils.cacheData("news", response);
-                        questionnaires.clear();
-                        for (QuestionnaireResponse q : temple) {
-                            questionnaires.add(q);
-                        }
-                        mAdapter.notifyDataSetChanged();
-
-                        swipeRefreshLayout.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                swipeRefreshLayout.setRefreshing(false);
+                        if (temple.size() != 0) {
+                            UserUtils.cacheData("news", response);
+                            questionnaires.clear();
+                            for (QuestionnaireResponse q : temple) {
+                                questionnaires.add(q);
                             }
-                        },3000);
+                            mAdapter.notifyDataSetChanged();
+
+                            swipeRefreshLayout.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    swipeRefreshLayout.setRefreshing(false);
+                                }
+                            }, 3000);
+                        } else {
+                            loadCache();
+                        }
                     }
                 });
             }
@@ -170,7 +182,7 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                swipeRefreshLayout.setRefreshing(false);
+//                swipeRefreshLayout.setRefreshing(false);
             }
         };
     }

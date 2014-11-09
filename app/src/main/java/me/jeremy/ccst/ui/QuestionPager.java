@@ -124,7 +124,10 @@ public class QuestionPager extends FragmentActivity {
                     if (i2 == 0) {
                         if (maxPosition != -1) {
                             if (position == maxPosition) {
-                                mMenu.findItem(R.id.action_save).setVisible(true);
+                                Log.d("float", v + "");
+                                Log.d("int", i2 + "");
+                                Log.d("flag", flag++ + "");
+//                                ToastUtils.showShort("最后一页！！");
                             }
                         }
                     }
@@ -138,7 +141,7 @@ public class QuestionPager extends FragmentActivity {
             @Override
             public void onPageScrollStateChanged(int i) {
                 if (i == maxPosition) {
-//                    ToastUtils.showShort("最后一页");
+                    ToastUtils.showShort("最后一页");
                 }
 
             }
@@ -170,9 +173,8 @@ public class QuestionPager extends FragmentActivity {
         @Override
         public Fragment getItem(int position) {
             String questionType = questions.get(position).getQuestionType();
-            if (position == questions.size() - 1) {
-
-            }
+            if (position == questions.size() - 1)
+            mMenu.findItem(R.id.action_save).setVisible(true);
             if (TypeParams.QUESTION_FIELD.equals(questionType)) {
                 return new FiledFragment(questions.get(position), position + 1);
             } else if (TypeParams.QUESTION_CHOOSE_SINGEL.equals(questionType)) {

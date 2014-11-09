@@ -38,17 +38,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:text="2014-9-21"
-                android:textColor="#6666" />
+                 />
         </LinearLayout>
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/listrow_imageViwe_done"
-        android:layout_width="30"
-        android:layout_height="30"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_alignParentRight="true"
-        android:background="@drawable/checkmark_round"
+        android:background="@drawable/todo"
         android:textColor="@color/pink" />
 
 </RelativeLayout>

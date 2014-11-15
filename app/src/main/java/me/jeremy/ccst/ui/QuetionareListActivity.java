@@ -1,5 +1,6 @@
 package me.jeremy.ccst.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -48,6 +49,8 @@ public class QuetionareListActivity extends BaseActivity implements SwipeRefresh
 
     private ListView mListView;
 
+    private ProgressDialog mProgressDialog;
+
     private LoadingFooter mLoadingFooter;
 
     private QuestionnairesAdapter mAdapter;
@@ -71,7 +74,6 @@ public class QuetionareListActivity extends BaseActivity implements SwipeRefresh
         setContentView(R.layout.fragment_questionnaires);
         categoryId = getIntent().getIntExtra("categoryId", 0);
         getActionBar().setTitle(getIntent().getStringExtra("categoryName"));
-        Log.d("CategoryId======>", categoryId + "");
         mListView = (ListView) findViewById(R.id.questionnaires_listView);
 
         mLoadingFooter = new LoadingFooter(this);
@@ -233,6 +235,5 @@ public class QuetionareListActivity extends BaseActivity implements SwipeRefresh
     @Override
     public void onRefresh() {
         swipeRefreshLayout.setRefreshing(false);
-        return;
     }
 }

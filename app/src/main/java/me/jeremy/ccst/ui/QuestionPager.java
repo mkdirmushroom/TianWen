@@ -13,7 +13,6 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -28,7 +27,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.drakeet.materialdialog.MaterialDialog;
 import me.jeremy.ccst.R;
 import me.jeremy.ccst.api.Api;
 import me.jeremy.ccst.api.TypeParams;
@@ -74,6 +72,10 @@ public class QuestionPager extends FragmentActivity {
 
     private int maxPosition = -1;
 
+    private boolean commitData = false;
+
+    private boolean haveDone = false;
+
     /**
      * Answer params
      */
@@ -94,7 +96,6 @@ public class QuestionPager extends FragmentActivity {
      */
     private PagerAdapter mPagerAdapter;
 
-    private int flag = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,42 +111,13 @@ public class QuestionPager extends FragmentActivity {
 
         id = getIntent().getStringExtra("QuestionnaireId");
         if (ToolUtils.isConnectInternet()) {
+            progressDialog = ProgressDialog.show(QuestionPager.this, null, "玩儿命加载中...", true, true);
             executeRequest(new MyStringRequest(Request.Method.GET, Api.Host_ALIYUN + "detail/" + id,
                     responseListener(), errorListener()));
         } else {
             ToastUtils.showShort("网络未连接，不能捡肥皂");
         }
         mPager.setAdapter(mPagerAdapter);
-        mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            int position = 0;
-
-            @Override
-            public void onPageScrolled(int i, float v, int i2) {
-                    if (i2 == 0) {
-                        if (maxPosition != -1) {
-                            if (position == maxPosition) {
-                                Log.d("float", v + "");
-                                Log.d("int", i2 + "");
-                                Log.d("flag", flag++ + "");
-//                                ToastUtils.showShort("最后一页！！");
-                            }
-                        }
-                    }
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-                position = i;
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-                if (i == maxPosition) {
-                    ToastUtils.showShort("最后一页");
-                }
-
-            }
-        });
         mPager.setOffscreenPageLimit(1);
     }
 
@@ -173,8 +145,10 @@ public class QuestionPager extends FragmentActivity {
         @Override
         public Fragment getItem(int position) {
             String questionType = questions.get(position).getQuestionType();
-            if (position == questions.size() - 1)
-            mMenu.findItem(R.id.action_save).setVisible(true);
+            if (position == questions.size() - 1) {
+                mMenu.findItem(R.id.action_save).setIcon(R.drawable.upload_data_white);
+                commitData = true;
+            }
             if (TypeParams.QUESTION_FIELD.equals(questionType)) {
                 return new FiledFragment(questions.get(position), position + 1);
             } else if (TypeParams.QUESTION_CHOOSE_SINGEL.equals(questionType)) {
@@ -190,81 +164,38 @@ public class QuestionPager extends FragmentActivity {
         public int getCount() {
             return questions.size();
         }
-
-
     }
 
-    private Response.Listener<String> responseListener() {
-        return new Response.Listener<String>() {
-            QuestionnaireDetailResponse temple;
-
-            @Override
-            public void onResponse(final String response) {
-                TaskUtils.executeAsyncTask(new AsyncTask<Object, Object, Object>() {
-
-                    @Override
-                    protected Object doInBackground(Object... params) {
-                        temple = gson.fromJson(response, type);
-                        questionnaireDetailResponse = temple;
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Object o) {
-                        super.onPostExecute(o);
-                        questions.clear();
-                        for (QuestionResponse q : temple.getQuestions()) {
-                            questions.add(q);
-                        }
-                        maxPosition = questions.size() - 1;
-                        mPagerAdapter.notifyDataSetChanged();
-                        mActionBar.setTitle(ParamsUtils.getQuestionNums(questions.size()));
-                    }
-                });
-            }
-        };
-    }
-
-    protected Response.ErrorListener errorListener() {
-        return new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (ToolUtils.isConnectInternet()) {
-                    progressDialog.dismiss();
+    /**
+     * Post the answer data
+     */
+    private void postData() {
+        initPostData();
+        if (UserUtils.getUserId() != 0) {
+            answerSheet.setUserId(UserUtils.getUserId());
+            if (Records.getDataCenter() != null) {
+                Records.getDataCenter().clear();
+                Records.getStringDataCenter().clear();
+                String params = new Gson().toJson(answerSheet);
+                Log.d("提交的数据=======》", params);
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = new JSONObject(params);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+                executeRequest(new GsonRequest<Boolean>(Api.Host_ALIYUN + "doquestionnaire", jsonObject,
+                        Boolean.class, postDataResponseListener(), errorListener()));
             }
-        };
-    }
-
-    protected void executeRequest(Request<?> request) {
-        RequestManager.addRequest(request, this);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            this.finish();
-            return true;
-        } else if (item.getItemId() == R.id.action_save) {
-            if (ToolUtils.isConnectInternet()) {
-                progressDialog = ProgressDialog.show(QuestionPager.this, null, "玩儿命提交中...", true, true);
-                commitData();
-            } else {
-                ToastUtils.showShort("网络未连接，不能扔肥皂");
-            }
+        } else {
+            ToastUtils.showShort("没有登录哦,别想碰我");
         }
-        return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.question, menu);
-        mMenu = menu;
-        mMenu.findItem(R.id.action_save).setVisible(false);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    private void commitData() {
+    /**
+     * Initial the post data
+     */
+    private void initPostData() {
         int position = 0;
         Integer questionId = 0;
         String questionType = null;
@@ -298,25 +229,74 @@ public class QuestionPager extends FragmentActivity {
         }
         answerSheet.setQuestions(answers);
         answerSheet.setQuestionnaireId(Integer.parseInt(id));
-        if (UserUtils.getUserId() != 0) {
-            answerSheet.setUserId(UserUtils.getUserId());
-            if (Records.getDataCenter() != null) {
-                Records.getDataCenter().clear();
-                Records.getStringDataCenter().clear();
-                String params = new Gson().toJson(answerSheet);
-                Log.d("提交的数据=======》", params);
-                JSONObject jsonObject = null;
-                try {
-                    jsonObject = new JSONObject(params);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+    }
+
+    private boolean haveDoneAllQuestion() {
+        int questionId = 0;
+        for (int position = 0; position < questions.size() -1 ; position++) {
+            questionId = questions.get(position).getId();
+            if (TypeParams.QUESTION_FIELD.equals(questions.get(position).getQuestionType())) {
+                if (Records.getStringDataCenter().get(questionId) == null) {
+                    Log.d("未填充完数据","");
+                    return false;
                 }
-                executeRequest(new GsonRequest<Boolean>(Api.Host_ALIYUN + "doquestionnaire/", jsonObject,
-                        Boolean.class, postDataResponseListener(), errorListener()));
+            } else {
+                if (Records.getDataCenter().get(questionId) == null ||
+                        Records.getDataCenter().get(questionId).size() == 0) {
+                    Log.d("未填充完数据","");
+                    return false;
+                }
             }
-        } else {
-            ToastUtils.showShort("没有登录哦,别想碰我");
         }
+        Log.d("数据填充完成","——————————————————————————");
+        return true;
+    }
+
+    private Response.Listener<String> responseListener() {
+        return new Response.Listener<String>() {
+            QuestionnaireDetailResponse temple;
+
+            @Override
+            public void onResponse(final String response) {
+                TaskUtils.executeAsyncTask(new AsyncTask<Object, Object, Object>() {
+
+                    @Override
+                    protected Object doInBackground(Object... params) {
+                        temple = gson.fromJson(response, type);
+                        questionnaireDetailResponse = temple;
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Object o) {
+                        super.onPostExecute(o);
+                        progressDialog.dismiss();
+                        questions.clear();
+                        for (QuestionResponse q : temple.getQuestions()) {
+                            questions.add(q);
+                        }
+                        maxPosition = questions.size() - 1;
+                        mPagerAdapter.notifyDataSetChanged();
+                        mActionBar.setTitle(ParamsUtils.getQuestionNums(questions.size()));
+                    }
+                });
+            }
+        };
+    }
+
+    protected Response.ErrorListener errorListener() {
+        return new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (ToolUtils.isConnectInternet()) {
+                    progressDialog.dismiss();
+                }
+            }
+        };
+    }
+
+    protected void executeRequest(Request<?> request) {
+        RequestManager.addRequest(request, this);
     }
 
     private Response.Listener<Boolean> postDataResponseListener() {
@@ -335,15 +315,43 @@ public class QuestionPager extends FragmentActivity {
                         progressDialog.dismiss();
                         Log.d("提交数据结果=======》", response.toString());
                         if (true == response) {
-                            ToastUtils.showShort("提交成功\n捡过的肥皂不能再捡啦");
+                            ToastUtils.showShort("提交成功");
                             QuestionPager.this.finish();
                         } else if (false == response) {
-                            ToastUtils.showShort("提交失败\n再扔一次肥皂");
+                            ToastUtils.showShort("提交失败");
                         }
                     }
                 });
             }
         };
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.question, menu);
+        mMenu = menu;
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
+            return true;
+        } else if (item.getItemId() == R.id.action_save) {
+            if (commitData && haveDoneAllQuestion()) {
+                if (ToolUtils.isConnectInternet()) {
+                    progressDialog = ProgressDialog.show(QuestionPager.this, null, "玩儿命提交中...",
+                            true, true);
+                    postData();
+                } else {
+                    ToastUtils.showShort("网络未连接，不能扔肥皂");
+                }
+            } else {
+                ToastUtils.showShort("没做完不能提交哦");
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

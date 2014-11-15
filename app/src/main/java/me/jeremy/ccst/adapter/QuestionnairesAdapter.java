@@ -24,7 +24,7 @@ public class QuestionnairesAdapter extends BaseAdapter {
 
     private List<QuestionnaireResponse> data;
 
-    private Resources res = App.getContext().getResources();
+//    private Resources res = App.getContext().getResources();
 
     public QuestionnairesAdapter(Context context, List<QuestionnaireResponse> questionnaires) {
         this.mContext = context;
@@ -68,9 +68,9 @@ public class QuestionnairesAdapter extends BaseAdapter {
         }
         if (viewHolder.topic.getText() != null) {
             if (data.get(position).getDone()) {
-                viewHolder.done.setBackground(res.getDrawable(R.drawable.todo));
+                viewHolder.done.setVisibility(View.GONE);
             } else {
-                viewHolder.done.setBackground(res.getDrawable(R.drawable.check));
+                viewHolder.done.setVisibility(View.VISIBLE);
             }
         }
         viewHolder.topic.setText(data.get(position).getTopic());

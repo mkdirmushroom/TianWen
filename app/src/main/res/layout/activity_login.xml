@@ -1,85 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <ImageView
-        android:layout_marginTop="16dp"
         android:id="@+id/login_logo"
+        android:layout_width="112dp"
+        android:layout_height="112dp"
         android:layout_gravity="center"
-        android:padding="16dp"
-        android:layout_width="144dp"
-        android:layout_height="144dp"
-        android:src="@drawable/ic_launcher"/>
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_launcher" />
+
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/login_edit_area"
         android:layout_width="match_parent"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:padding="16dp">
 
-        <LinearLayout
-            android:padding="@dimen/activity_horizontal_margin"
-            android:id="@+id/login_edit_area"
-            android:orientation="vertical"
+        <EditText
+            android:id="@+id/login_et_username"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_text"
+            android:inputType="text"
+            android:hint="用户名" />
 
-            <EditText
-                android:background="@drawable/edit_text"
-                android:id="@+id/login_et_username"
-                android:hint="用户名"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <EditText
-                android:background="@drawable/edit_text"
-                android:id="@+id/login_et_password"
-                android:paddingTop="20dp"
-                android:hint="密码"
-                android:inputType="textPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:padding="@dimen/activity_horizontal_margin"
-            android:orientation="vertical"
+        <EditText
+            android:id="@+id/login_et_password"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/login_tv_notice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <Button
-                android:id="@+id/login_bu_submit"
-                android:text="@string/title_login"
-                android:textColor="@color/white"
-                android:background="@color/Cyan"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <RelativeLayout
-                android:paddingTop="50dp"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:gravity="center">
-                <!--<TextView-->
-                    <!--android:id="@+id/login_tv_loginError"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:textSize="16sp"-->
-                    <!--android:text="登陆遇到问题？"/>-->
-                <TextView
-                    android:id="@+id/login_tv_signup"
-                    android:layout_alignParentRight="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:text="注册"/>
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_text"
+            android:hint="密码"
+            android:inputType="textPassword"
+            android:paddingTop="20dp" />
+    </LinearLayout>
 
-            </RelativeLayout>
-        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_horizontal_margin">
 
+        <TextView
+            android:id="@+id/login_tv_notice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textcolor"/>
+
+        <Button
+            android:id="@+id/login_bu_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/Cyan"
+            android:text="@string/title_login"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/login_tv_signup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:text="注册"
+            android:textColor="@color/textcolor"
+            android:textSize="16sp" />
     </LinearLayout>
 
 </LinearLayout>

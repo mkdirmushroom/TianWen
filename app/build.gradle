@@ -42,7 +42,4 @@ dependencies {
     compile 'com.ikimuhendis:ldrawer:0.1'
     compile 'me.drakeet.materialdialog:library:1.0.7'
     compile 'com.github.johnkil.android-appmsg:appmsg:1.2.0'
-
-
-
 }

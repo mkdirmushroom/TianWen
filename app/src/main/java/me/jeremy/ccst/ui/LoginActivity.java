@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -59,6 +61,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_login);
 
         ActionBar actionBar = getActionBar();
@@ -83,7 +86,6 @@ public class LoginActivity extends BaseActivity {
                                 .duration(700)
                                 .playOn(findViewById(R.id.login_edit_area));
                         notice.setText("用户名或密码不能为空哦");
-                        YoYo.with(Techniques.BounceInDown).playOn(notice);
                     } else {
                         userLoginRequest.setUserName(userName);
                         userLoginRequest.setPassWord(passWord);
@@ -97,7 +99,7 @@ public class LoginActivity extends BaseActivity {
                         }
                         if (ToolUtils.isConnectInternet()) {
                             progressDialog = ProgressDialog.show(LoginActivity.this, null, "Login...", true, true);
-                            executeRequest(new GsonRequest<UserInfoResponse>(Api.Host_ALIYUN_SLAVE + "login",
+                            executeRequest(new GsonRequest<UserInfoResponse>(Api.Host_ALIYUN + "login",
                                     jsonObject, UserInfoResponse.class, responseListener(), errorListener()));
                         } else {
                             ToastUtils.showShort("网络未连接，不能捡肥皂");
@@ -105,13 +107,6 @@ public class LoginActivity extends BaseActivity {
                     }
                 }
             });
-//            findViewById(R.id.login_tv_loginError).setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    ToastUtils.showShort("login  error");
-//
-//                }
-//            });
             findViewById(R.id.login_tv_signup).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -160,7 +155,7 @@ public class LoginActivity extends BaseActivity {
                 if (error.networkResponse != null) {
                     if (error.networkResponse.statusCode == 500) {
                         Log.d("切换到备用服务器", "");
-                        executeRequest(new GsonRequest<UserInfoResponse>(Api.Host_ALIYUN + "login",
+                        executeRequest(new GsonRequest<UserInfoResponse>(Api.Host_ALIYUN_SLAVE + "login",
                                 jsonObject, UserInfoResponse.class, responseListener(), errorListener()));
                     }
                 }

@@ -48,6 +48,7 @@ public class FiledFragment extends Fragment{
 
     private boolean isEdit = true;
 
+    public FiledFragment(){}
 
     public FiledFragment(QuestionResponse response, int num) {
         this.questionResponse = response;

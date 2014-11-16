@@ -32,7 +32,6 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.easing:library:1.0.0@aar'
     compile 'com.daimajia.androidanimations:library:1.1.2@aar'
-    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile 'com.android.support:support-v4:21.0.0+'
     compile 'com.android.support:appcompat-v7:21.0.0+'
     compile 'com.etsy.android.grid:library:+'
@@ -42,4 +41,5 @@ dependencies {
     compile 'com.ikimuhendis:ldrawer:0.1'
     compile 'me.drakeet.materialdialog:library:1.0.7'
     compile 'com.github.johnkil.android-appmsg:appmsg:1.2.0'
+    compile 'com.github.manuelpeinado.fadingactionbar:fadingactionbar:3.1.2'
 }

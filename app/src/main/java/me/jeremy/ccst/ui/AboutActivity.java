@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+
+import com.manuelpeinado.fadingactionbar.FadingActionBarHelper;
+
 import me.jeremy.ccst.R;
 
 /**
@@ -14,6 +17,14 @@ public class AboutActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
+        FadingActionBarHelper helper = new FadingActionBarHelper()
+                .actionBarBackground(R.drawable.ab_background)
+                .headerLayout(R.layout.header)
+                .contentLayout(R.layout.activity_about);
+        setContentView(helper.createView(this));
+        helper.initActionBar(this);
+        getActionBar().setDisplayShowHomeEnabled(false);
+
     }
 
     @Override

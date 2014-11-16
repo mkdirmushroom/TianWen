@@ -90,7 +90,6 @@ public class MainActivity extends BaseActivity {
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-
         if (savedInstanceState == null) {
             setCategory(Category.latest);
         }

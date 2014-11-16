@@ -74,8 +74,6 @@ public class QuestionPager extends FragmentActivity {
 
     private boolean commitData = false;
 
-    private boolean haveDone = false;
-
     /**
      * Answer params
      */
@@ -111,7 +109,6 @@ public class QuestionPager extends FragmentActivity {
 
         id = getIntent().getStringExtra("QuestionnaireId");
         if (ToolUtils.isConnectInternet()) {
-            progressDialog = ProgressDialog.show(QuestionPager.this, null, "玩儿命加载中...", true, true);
             executeRequest(new MyStringRequest(Request.Method.GET, Api.Host_ALIYUN + "detail/" + id,
                     responseListener(), errorListener()));
         } else {
@@ -232,25 +229,29 @@ public class QuestionPager extends FragmentActivity {
     }
 
     private boolean haveDoneAllQuestion() {
-        int questionId = 0;
-        for (int position = 0; position < questions.size() -1 ; position++) {
+        int questionId;
+        for (int position = 0; position < questions.size() ; position++) {
             questionId = questions.get(position).getId();
             if (TypeParams.QUESTION_FIELD.equals(questions.get(position).getQuestionType())) {
                 if (Records.getStringDataCenter().get(questionId) == null) {
-                    Log.d("未填充完数据","");
+                    Log.d("未填充完填空数据","");
                     return false;
                 }
             } else {
-                if (Records.getDataCenter().get(questionId) == null ||
-                        Records.getDataCenter().get(questionId).size() == 0) {
-                    Log.d("未填充完数据","");
+                if (Records.getDataCenter().get(questionId) != null ) {
+                    if ( Records.getDataCenter().get(questionId).size() == 0) {
+                        Log.d("答案数目为空", Records.getDataCenter().get(questionId).size()+ "");
+                        return false;
+                    }
+                } else {
+                    Log.d("未填充完选择题目数据","");
                     return false;
                 }
             }
         }
-        Log.d("数据填充完成","——————————————————————————");
         return true;
     }
+
 
     private Response.Listener<String> responseListener() {
         return new Response.Listener<String>() {
@@ -270,7 +271,6 @@ public class QuestionPager extends FragmentActivity {
                     @Override
                     protected void onPostExecute(Object o) {
                         super.onPostExecute(o);
-                        progressDialog.dismiss();
                         questions.clear();
                         for (QuestionResponse q : temple.getQuestions()) {
                             questions.add(q);
@@ -289,7 +289,6 @@ public class QuestionPager extends FragmentActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (ToolUtils.isConnectInternet()) {
-                    progressDialog.dismiss();
                 }
             }
         };

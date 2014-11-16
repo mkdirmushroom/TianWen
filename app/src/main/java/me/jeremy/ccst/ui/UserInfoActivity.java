@@ -3,10 +3,13 @@ package me.jeremy.ccst.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.manuelpeinado.fadingactionbar.FadingActionBarHelper;
 
 import me.jeremy.ccst.R;
 import me.jeremy.ccst.model.user.UserInfoResponse;
@@ -32,10 +35,16 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.perfrerence_user);
+        FadingActionBarHelper helper = new FadingActionBarHelper()
+                .actionBarBackground(R.drawable.ab_background)
+                .headerLayout(R.layout.header)
+                .contentLayout(R.layout.perfrerence_user)
+                .lightActionBar(true);
+        setContentView(helper.createView(this));
+        helper.initActionBar(this);
+        getActionBar().setDisplayShowHomeEnabled(false);
         initView();
         initViewData();
-
     }
 
     private void initView() {
@@ -96,6 +105,12 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.global, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

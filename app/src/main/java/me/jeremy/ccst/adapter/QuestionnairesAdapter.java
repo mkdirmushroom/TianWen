@@ -10,10 +10,12 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Random;
 
 import me.jeremy.ccst.App;
 import me.jeremy.ccst.R;
 import me.jeremy.ccst.model.question.QuestionnaireResponse;
+import me.jeremy.ccst.utils.ParamsUtils;
 
 /**
  * Created by qiugang on 2014/9/22.
@@ -24,6 +26,11 @@ public class QuestionnairesAdapter extends BaseAdapter {
 
     private List<QuestionnaireResponse> data;
 
+
+
+    private Random random = new Random();
+
+
 //    private Resources res = App.getContext().getResources();
 
     public QuestionnairesAdapter(Context context, List<QuestionnaireResponse> questionnaires) {
@@ -33,6 +40,7 @@ public class QuestionnairesAdapter extends BaseAdapter {
     }
 
     public class ViewHolder {
+        private TextView shot;
         private TextView topic;
         private TextView date;
         private TextView done;
@@ -59,6 +67,7 @@ public class QuestionnairesAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(App.getContext()).inflate(R.layout.list_row, null);
             viewHolder = new ViewHolder();
+            viewHolder.shot = (TextView) convertView.findViewById(R.id.listrow_textview_shot);
             viewHolder.topic = (TextView) convertView.findViewById(R.id.listrow_textview_topic);
             viewHolder.date = (TextView) convertView.findViewById(R.id.listrow_textview_date);
             viewHolder.done = (TextView) convertView.findViewById(R.id.listrow_imageViwe_done);
@@ -73,8 +82,10 @@ public class QuestionnairesAdapter extends BaseAdapter {
                 viewHolder.done.setVisibility(View.VISIBLE);
             }
         }
+        viewHolder.shot.setText(data.get(position).getTopic().substring(0,1) +"");
+        viewHolder.shot.setBackgroundColor(mContext.getResources().getColor(ParamsUtils.colors[data.get(position).getId()%10]));
         viewHolder.topic.setText(data.get(position).getTopic());
-        viewHolder.date.setText(data.get(position).getDate().toString());
+        viewHolder.date.setText(ParamsUtils.getCreateTime(data.get(position).getDate().toString()));
         return convertView;
     }
 }

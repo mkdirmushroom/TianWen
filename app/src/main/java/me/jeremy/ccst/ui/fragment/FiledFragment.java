@@ -17,11 +17,8 @@ import android.widget.TextView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 
-import java.util.List;
-
 import me.jeremy.ccst.R;
 import me.jeremy.ccst.data.center.Records;
-import me.jeremy.ccst.model.question.ChooseResponse;
 import me.jeremy.ccst.model.question.QuestionResponse;
 import me.jeremy.ccst.utils.ParamsUtils;
 
@@ -65,9 +62,11 @@ public class FiledFragment extends Fragment{
         mDisplayView = (TextView) rootView.findViewById(R.id.field_textView);
         mTitle.setText(number+"." + questionResponse.getTitle() +
                 ParamsUtils.getQuestionTypeParams(questionResponse.getQuestionType()));
+
         questionId = questionResponse.getId();
         filedData = Records.getStringDataCenter().get(questionId);
         if ( filedData != null){
+            mDisplayView.setVisibility(View.VISIBLE);
             mDisplayView.setText(filedData);
             content.setText(filedData);
         }

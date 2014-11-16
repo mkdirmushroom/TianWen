@@ -6,9 +6,9 @@
     android:background="#eeeeee"
     android:orientation="vertical">
     <LinearLayout
-        android:layout_height="80dp"
+        android:layout_height="120dp"
         android:layout_width="match_parent"
-        android:background="@drawable/drawerbg"
+        android:background="@drawable/skin"
         android:orientation="vertical"
         >
         <TextView

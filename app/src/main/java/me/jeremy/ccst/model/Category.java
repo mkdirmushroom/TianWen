@@ -5,7 +5,7 @@ package me.jeremy.ccst.model;
  */
 public enum Category {
 
-    latest("最新问卷"), Category("问卷分类"), Settings("设置");
+    latest("最新问卷"), Category("问卷分类"), Settings("设置"), Exit("退出");
     private String mDisplayName;
 
     Category(String displayName) {

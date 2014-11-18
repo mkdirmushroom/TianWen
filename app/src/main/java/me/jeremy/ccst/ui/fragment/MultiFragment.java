@@ -33,7 +33,6 @@ public class MultiFragment extends Fragment {
     private QuestionResponse questionResponse;
 
     private List<ChooseResponse> chooseResponses;
-    //post
 
     private CreateQuestionAnswer createQuestionAnswer = new CreateQuestionAnswer();
 
@@ -41,10 +40,13 @@ public class MultiFragment extends Fragment {
 
     private int number;
 
+    public MultiFragment(){}
+
     public MultiFragment(QuestionResponse response, int num) {
         this.questionResponse = response;
         this.number = num;
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 

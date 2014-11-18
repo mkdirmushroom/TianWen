@@ -42,6 +42,12 @@ public class MainActivity extends BaseActivity {
 
     private Fragment mContentFragment;
 
+    private QuestionnairesFragment questionnairesFragment;
+
+    private AllCategoryFragment allCategoryFragment;
+
+    private SettingFragment settingFragment;
+
     private ActionBar mActionBar;
 
     private DrawerArrowDrawable drawerArrow;
@@ -137,19 +143,31 @@ public class MainActivity extends BaseActivity {
     public void setCategory(Category category) {
         mDrawerLayout.closeDrawer(GravityCompat.START);
         android.app.FragmentManager fragmentManager = getFragmentManager();
+        if (category == Category.Exit) {
+            finish();
+        }
         if (mCategory == category) {
             return;
         }
         mCategory = category;
         if (category != Category.Settings) {
             if (category == Category.latest) {
-                mContentFragment = QuestionnairesFragment.newInstance();
+                if (questionnairesFragment == null) {
+                    questionnairesFragment = QuestionnairesFragment.newInstance();
+                }
+                    mContentFragment = questionnairesFragment;
             } else if (category == Category.Category) {
-                mContentFragment = AllCategoryFragment.newInstance();
+                if (allCategoryFragment == null) {
+                    allCategoryFragment = AllCategoryFragment.newInstance();
+                }
+                mContentFragment = allCategoryFragment;
             }
             fragmentManager.beginTransaction().replace(R.id.container, mContentFragment).commit();
         } else {
-            fragmentManager.beginTransaction().replace(R.id.container, SettingFragment.newInstance()).commit();
+            if (settingFragment == null) {
+                settingFragment = SettingFragment.newInstance();
+            }
+            fragmentManager.beginTransaction().replace(R.id.container, settingFragment).commit();
         }
         mActionBar.setTitle(category.getDisplayName());
     }

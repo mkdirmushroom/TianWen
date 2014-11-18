@@ -3,7 +3,6 @@ package me.jeremy.ccst.ui.fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -98,7 +96,7 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
         });
         AnimationAdapter animationAdapter = new ItemAnimationAdapter(mAdapter);
         animationAdapter.setAbsListView(listView);
-        animationAdapter.getViewAnimator().setAnimationDelayMillis(30);
+        animationAdapter.getViewAnimator().setAnimationDelayMillis(35);
         animationAdapter.getViewAnimator().setAnimationDurationMillis(getResources().getInteger(android.R.integer.config_mediumAnimTime));
         listView.setAdapter(animationAdapter);
         loadData();
@@ -148,7 +146,12 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
                     @Override
                     protected Object doInBackground(Object... params) {
                         Log.d("String response data _->", response);
-                        temple = gson.fromJson(response, listType);
+                        try {
+                            //联接联通网络未登录产生异常
+                            temple = gson.fromJson(response, listType);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         return null;
                     }
 
@@ -182,7 +185,7 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-//                swipeRefreshLayout.setRefreshing(false);
+                swipeRefreshLayout.setRefreshing(false);
             }
         };
     }

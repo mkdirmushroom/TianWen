@@ -19,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.telly.floatingaction.FloatingAction;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -82,6 +83,8 @@ public class QuestionPager extends FragmentActivity {
 
     private List<CreateQuestionAnswer> answers = new ArrayList<CreateQuestionAnswer>();
 
+    private JSONObject postJson;
+
 
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
@@ -106,16 +109,21 @@ public class QuestionPager extends FragmentActivity {
         //Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+        mPager.setOffscreenPageLimit(1);
+        loadInitialData(Api.Host_ALIYUN);
+    }
 
+    private void loadInitialData(String host) {
+        progressDialog = ProgressDialog.show(QuestionPager.this, null, "玩儿命获取中...",
+                true, true);
         id = getIntent().getStringExtra("QuestionnaireId");
         if (ToolUtils.isConnectInternet()) {
-            executeRequest(new MyStringRequest(Request.Method.GET, Api.Host_ALIYUN + "detail/" + id,
+            executeRequest(new MyStringRequest(Request.Method.GET, host + "detail/" + id,
                     responseListener(), errorListener()));
         } else {
             ToastUtils.showShort("网络未连接，不能捡肥皂");
         }
-        mPager.setAdapter(mPagerAdapter);
-        mPager.setOffscreenPageLimit(1);
     }
 
     @Override
@@ -143,7 +151,7 @@ public class QuestionPager extends FragmentActivity {
         public Fragment getItem(int position) {
             String questionType = questions.get(position).getQuestionType();
             if (position == questions.size() - 1) {
-                mMenu.findItem(R.id.action_save).setIcon(R.drawable.upload_data_white);
+                mMenu.findItem(R.id.action_save).setVisible(true);
                 commitData = true;
             }
             if (TypeParams.QUESTION_FIELD.equals(questionType)) {
@@ -166,24 +174,10 @@ public class QuestionPager extends FragmentActivity {
     /**
      * Post the answer data
      */
-    private void postData() {
-        initPostData();
+    private void postData(String host) {
         if (UserUtils.getUserId() != 0) {
-            answerSheet.setUserId(UserUtils.getUserId());
-            if (Records.getDataCenter() != null) {
-                Records.getDataCenter().clear();
-                Records.getStringDataCenter().clear();
-                String params = new Gson().toJson(answerSheet);
-                Log.d("提交的数据=======》", params);
-                JSONObject jsonObject = null;
-                try {
-                    jsonObject = new JSONObject(params);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                executeRequest(new GsonRequest<Boolean>(Api.Host_ALIYUN + "doquestionnaire", jsonObject,
-                        Boolean.class, postDataResponseListener(), errorListener()));
-            }
+            executeRequest(new GsonRequest<Boolean>(Api.Host_ALIYUN + "doquestionnaire", postJson,
+                    Boolean.class, postDataResponseListener(), postErrorListener()));
         } else {
             ToastUtils.showShort("没有登录哦,别想碰我");
         }
@@ -226,6 +220,18 @@ public class QuestionPager extends FragmentActivity {
         }
         answerSheet.setQuestions(answers);
         answerSheet.setQuestionnaireId(Integer.parseInt(id));
+        answerSheet.setUserId(UserUtils.getUserId());
+        if (Records.getDataCenter() != null) {
+            Records.getDataCenter().clear();
+            Records.getStringDataCenter().clear();
+            String params = new Gson().toJson(answerSheet);
+            Log.d("提交的数据=======》", params);
+            try {
+                postJson = new JSONObject(params);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private boolean haveDoneAllQuestion() {
@@ -271,6 +277,7 @@ public class QuestionPager extends FragmentActivity {
                     @Override
                     protected void onPostExecute(Object o) {
                         super.onPostExecute(o);
+                        progressDialog.dismiss();
                         questions.clear();
                         for (QuestionResponse q : temple.getQuestions()) {
                             questions.add(q);
@@ -288,7 +295,21 @@ public class QuestionPager extends FragmentActivity {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (ToolUtils.isConnectInternet()) {
+                if (error != null) {
+                    Log.d("get数据切换到备用服务器", "true");
+                    loadInitialData(Api.Host_ALIYUN_SLAVE);
+                }
+            }
+        };
+    }
+
+    protected Response.ErrorListener postErrorListener() {
+        return new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error != null) {
+                    postData(Api.Host_ALIYUN_SLAVE);
+                    Log.d("post数据切换到熬备用服务器","");
                 }
             }
         };
@@ -329,6 +350,7 @@ public class QuestionPager extends FragmentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.question, menu);
         mMenu = menu;
+        menu.findItem(R.id.action_save).setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -342,7 +364,8 @@ public class QuestionPager extends FragmentActivity {
                 if (ToolUtils.isConnectInternet()) {
                     progressDialog = ProgressDialog.show(QuestionPager.this, null, "玩儿命提交中...",
                             true, true);
-                    postData();
+                    initPostData();
+                    postData(Api.Host_ALIYUN);
                 } else {
                     ToastUtils.showShort("网络未连接，不能扔肥皂");
                 }

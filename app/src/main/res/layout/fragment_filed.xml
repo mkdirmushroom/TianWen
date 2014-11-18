@@ -32,24 +32,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
-                android:textSize="18sp"
-                android:visibility="gone" />
+                android:textSize="18sp"/>
 
-            <EditText
-                android:id="@+id/field_editText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/edit_text"
-                android:padding="16dp"
-                android:visibility="gone" />
 
-            <Button
+
+            <ImageButton
                 android:id="@+id/field_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/card_bg_play"
+                android:background="@drawable/circle"
+                android:src="@drawable/edit"
                 android:text="编辑"
                 android:textColor="@color/pink"
                 />

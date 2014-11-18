@@ -1,16 +1,18 @@
 package me.jeremy.ccst.ui.fragment;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 
@@ -25,7 +27,7 @@ import me.jeremy.ccst.utils.ParamsUtils;
 /**
  * Created by qiugang on 2014/9/28.
  */
-public class FiledFragment extends Fragment{
+public class FiledFragment extends Fragment {
 
     private TextView mTitle;
 
@@ -35,7 +37,7 @@ public class FiledFragment extends Fragment{
 
     private EditText content;
 
-    private Button mButton;
+    private ImageButton mButton;
 
     private String filedData;
 
@@ -43,7 +45,7 @@ public class FiledFragment extends Fragment{
 
     private int number;
 
-    private boolean isEdit = true;
+    private Dialog mDialog;
 
     public FiledFragment(){}
 
@@ -57,8 +59,13 @@ public class FiledFragment extends Fragment{
 
         View rootView = inflater.inflate(R.layout.fragment_filed, container, false);
         mTitle = (TextView) rootView.findViewById(R.id.field_title);
-        mButton = (Button) rootView.findViewById(R.id.field_button);
-        content = (EditText) rootView.findViewById(R.id.field_editText);
+        mButton = (ImageButton) rootView.findViewById(R.id.field_button);
+
+
+
+        content = new EditText(getActivity());
+        content.setBackground(getResources().getDrawable(R.drawable.edit_text));
+        content.setLines(5);
         mDisplayView = (TextView) rootView.findViewById(R.id.field_textView);
         mTitle.setText(number+"." + questionResponse.getTitle() +
                 ParamsUtils.getQuestionTypeParams(questionResponse.getQuestionType()));
@@ -70,39 +77,36 @@ public class FiledFragment extends Fragment{
             mDisplayView.setText(filedData);
             content.setText(filedData);
         }
+
+        mDialog = new AlertDialog.Builder(getActivity())
+                .setTitle("输入吧少年")
+                .setView(content)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String currentData = content.getText().toString().trim();
+                        if (!TextUtils.isEmpty(currentData)) {
+                            filedData = currentData;
+                            if (Records.queryInt(questionId)) {
+                                Records.getStringDataCenter().remove(questionId);
+                                Records.getStringDataCenter().put(questionId, filedData);
+                            } else {
+                                Records.getStringDataCenter().put(questionId, filedData);
+                            }
+                        }
+                        YoYo.with(Techniques.BounceInDown).playOn(mDisplayView);
+                        mDisplayView.setText(currentData);
+                        //when submit ,hide the keyboard
+                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(content.getWindowToken(), 0);
+                    }
+                })
+                .create();
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isEdit) {
-                    mDisplayView.setVisibility(View.GONE);
-                    content.setVisibility(View.VISIBLE);
-                    content.requestFocus();
-                    mButton.setText("确定");
-                    isEdit = false;
-                    getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-                            | WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-
-                } else {
-                    String currentData = content.getText().toString().trim();
-                    if (!TextUtils.isEmpty(currentData)) {
-                        filedData = currentData;
-                        if (Records.queryInt(questionId)) {
-                            Records.getStringDataCenter().remove(questionId);
-                            Records.getStringDataCenter().put(questionId, filedData);
-                        } else {
-                            Records.getStringDataCenter().put(questionId, filedData);
-                        }
-                    }
-                    mDisplayView.setVisibility(View.VISIBLE);
-                    YoYo.with(Techniques.BounceInDown).playOn(mDisplayView);
-                    mDisplayView.setText(currentData);
-                    content.setVisibility(View.GONE);
-                    mButton.setText("编辑");
-                    isEdit = true;
-                    //when submit ,hide the keyboard
-                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(content.getWindowToken(), 0);
-                }
+                    mDialog.show();
+                    ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).showSoftInput(content, 0);
             }
         });
 

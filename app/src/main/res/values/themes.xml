@@ -3,9 +3,8 @@
 
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/ActionBar</item>
-        <item name="android:actionBarSize">56dp</item>
+        <!--<item name="android:actionBarSize">56dp</item>-->
         <item name="android:windowBackground">@color/windowBackground</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_ab_up</item>
     </style>
 
     <style name="ActionBar" parent="android:Widget.ActionBar">
@@ -16,21 +15,23 @@
 
     <style name="ActionBar.TitleText" parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="ActionBar." parent="android:TextAppearance.Holo.Widget.ActionBar.Menu">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="AppTheme.TranslucentActionBar">
         <item name="android:actionBarStyle">@style/Widget.ActionBar.Transparent</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_ab_up</item>
     </style>
 
     <style name="AppTheme.Light.TranslucentActionBar" parent="@android:style/Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/Widget.Light.ActionBar.Transparent</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_ab_up</item>
     </style>
 
 </resources>

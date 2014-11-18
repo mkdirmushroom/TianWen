@@ -3,7 +3,6 @@ package me.jeremy.ccst.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 

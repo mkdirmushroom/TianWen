@@ -26,12 +26,7 @@ public class QuestionnairesAdapter extends BaseAdapter {
 
     private List<QuestionnaireResponse> data;
 
-
-
-    private Random random = new Random();
-
-
-//    private Resources res = App.getContext().getResources();
+//  private Resources res = App.getContext().getResources();
 
     public QuestionnairesAdapter(Context context, List<QuestionnaireResponse> questionnaires) {
         this.mContext = context;
@@ -64,6 +59,7 @@ public class QuestionnairesAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
+        String topic = data.get(position).getTopic();
         if (convertView == null) {
             convertView = LayoutInflater.from(App.getContext()).inflate(R.layout.list_row, null);
             viewHolder = new ViewHolder();
@@ -82,9 +78,15 @@ public class QuestionnairesAdapter extends BaseAdapter {
                 viewHolder.done.setVisibility(View.VISIBLE);
             }
         }
-        viewHolder.shot.setText(data.get(position).getTopic().substring(0,1) +"");
-        viewHolder.shot.setBackgroundColor(mContext.getResources().getColor(ParamsUtils.colors[data.get(position).getId()%10]));
-        viewHolder.topic.setText(data.get(position).getTopic());
+        viewHolder.shot.setText(topic.substring(0,1) +"");
+        viewHolder.shot.setBackgroundColor(mContext.getResources().getColor(
+                ParamsUtils.colors[data.get(position).getId()%10]));
+        if (topic.length() > 16) {
+            viewHolder.topic.setText(topic.substring(0,16) + "...");
+        } else {
+            viewHolder.topic.setText(topic);
+        }
+
         viewHolder.date.setText(ParamsUtils.getCreateTime(data.get(position).getDate().toString()));
         return convertView;
     }

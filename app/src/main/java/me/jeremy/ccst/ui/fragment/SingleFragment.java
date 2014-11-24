@@ -1,5 +1,6 @@
 package me.jeremy.ccst.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -41,6 +42,7 @@ public class SingleFragment extends Fragment {
 
     public SingleFragment() {}
 
+    @SuppressLint("ValidFragment")
     public SingleFragment(QuestionResponse response, int num) {
         this.questionResponse = response;
         this.number = num;

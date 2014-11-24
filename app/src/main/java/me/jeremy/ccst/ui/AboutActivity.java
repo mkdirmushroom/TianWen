@@ -17,12 +17,12 @@ public class AboutActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        FadingActionBarHelper helper = new FadingActionBarHelper()
-                .actionBarBackground(R.drawable.ab_background)
-                .headerLayout(R.layout.header)
-                .contentLayout(R.layout.activity_about);
-        setContentView(helper.createView(this));
-        helper.initActionBar(this);
+//        FadingActionBarHelper helper = new FadingActionBarHelper()
+//                .actionBarBackground(R.drawable.ic_launcher)
+//                .headerLayout(R.layout.header)
+//                .contentLayout(R.layout.activity_about);
+//        setContentView(helper.createView(this));
+//        helper.initActionBar(this);
         getActionBar().setDisplayShowHomeEnabled(false);
 
     }

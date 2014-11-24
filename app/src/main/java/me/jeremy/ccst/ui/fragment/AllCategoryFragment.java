@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.etsy.android.grid.StaggeredGridView;
 import com.google.gson.Gson;
@@ -24,9 +25,11 @@ import me.jeremy.ccst.R;
 import me.jeremy.ccst.adapter.AllCategorysAdapter;
 import me.jeremy.ccst.api.Api;
 import me.jeremy.ccst.data.MyStringRequest;
+import me.jeremy.ccst.data.RequestManager;
 import me.jeremy.ccst.model.CategoryResponse;
 import me.jeremy.ccst.ui.QuetionareListActivity;
 import me.jeremy.ccst.utils.TaskUtils;
+import me.jeremy.ccst.utils.ToastUtils;
 
 
 /**
@@ -67,7 +70,7 @@ public class AllCategoryFragment extends BaseFragment implements AdapterView.OnI
         mGridView.setOnItemClickListener(this);
         mAdapter = new AllCategorysAdapter(categories, getActivity());
         mGridView.setAdapter(mAdapter);
-        executeRequest(new MyStringRequest(Api.Host_ALIYUN + "/categories", myListener(), errorListener()));
+        executeRequest(new MyStringRequest(Api.HOSTS[Api.HOST_POSITION] + "/categories", myListener(), errorListener()));
         return rootView;
     }
 

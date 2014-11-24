@@ -96,7 +96,6 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
         }
         mIntent.putExtras(args);
         startActivity(mIntent);
-
     }
 
     @Override

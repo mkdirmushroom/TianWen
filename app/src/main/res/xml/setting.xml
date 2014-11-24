@@ -24,8 +24,11 @@
             android:key="pref_about"
             android:title="关于我们" />
         <Preference
-            android:summary="1.9.0 "
-            android:title="版本信息"></Preference>
+            android:key="pref_feedback"
+            android:title="问题反馈"/>
+        <Preference
+            android:key="pref_version"
+            android:title="版本信息"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

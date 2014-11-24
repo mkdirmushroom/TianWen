@@ -155,7 +155,7 @@ public class MainActivity extends BaseActivity {
                 if (questionnairesFragment == null) {
                     questionnairesFragment = QuestionnairesFragment.newInstance();
                 }
-                    mContentFragment = questionnairesFragment;
+                mContentFragment = questionnairesFragment;
             } else if (category == Category.Category) {
                 if (allCategoryFragment == null) {
                     allCategoryFragment = AllCategoryFragment.newInstance();

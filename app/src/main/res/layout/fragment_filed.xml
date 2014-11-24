@@ -38,11 +38,11 @@
 
             <ImageButton
                 android:id="@+id/field_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
                 android:layout_gravity="right"
-                android:background="@drawable/circle"
-                android:src="@drawable/edit"
+                android:background="@drawable/edit_button_bg"
+                android:src="@drawable/edit_add"
                 android:text="编辑"
                 android:textColor="@color/pink"
                 />

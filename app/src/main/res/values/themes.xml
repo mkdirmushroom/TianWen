@@ -3,7 +3,7 @@
 
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/ActionBar</item>
-        <!--<item name="android:actionBarSize">56dp</item>-->
+        <item name="android:actionBarSize">56dp</item>
         <item name="android:windowBackground">@color/windowBackground</item>
     </style>
 

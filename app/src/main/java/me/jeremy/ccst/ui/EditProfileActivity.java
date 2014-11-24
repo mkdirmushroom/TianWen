@@ -33,8 +33,6 @@ import me.jeremy.ccst.utils.UserUtils;
  */
 public class EditProfileActivity extends BaseActivity {
 
-    private static final String USER_NAME = "username";
-
     private static final String EMAIL = "email";
 
     private static final String QQ = "qq";
@@ -117,7 +115,7 @@ public class EditProfileActivity extends BaseActivity {
                 new Gson().toJson(userInfoResponse)).commit();
         Log.d("saved data", new Gson().toJson(userInfoResponse));
         if (ToolUtils.isConnectInternet()) {
-            executeRequest(new GsonRequest<UserInfoResponse>(Request.Method.PUT, Api.Host_ALIYUN + "updateuser",
+            executeRequest(new GsonRequest<UserInfoResponse>(Request.Method.PUT, Api.Host_ALIYUN + Api.UPDATEUSER,
                     jsonObject, UserInfoResponse.class, null, responseListener(), errorListener()));
         } else {
             ToastUtils.showShort("网络未连接，不能捡肥皂");

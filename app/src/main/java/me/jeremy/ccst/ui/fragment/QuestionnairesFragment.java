@@ -30,12 +30,14 @@ import me.jeremy.ccst.adapter.ItemAnimationAdapter;
 import me.jeremy.ccst.adapter.QuestionnairesAdapter;
 import me.jeremy.ccst.api.Api;
 import me.jeremy.ccst.data.MyStringRequest;
+import me.jeremy.ccst.data.RequestManager;
 import me.jeremy.ccst.model.question.QuestionnaireResponse;
 import me.jeremy.ccst.ui.QuestionPager;
 import me.jeremy.ccst.utils.TaskUtils;
 import me.jeremy.ccst.utils.ToastUtils;
 import me.jeremy.ccst.utils.ToolUtils;
 import me.jeremy.ccst.utils.UserUtils;
+import me.jeremy.ccst.view.CompleteView;
 
 /**
  * Created by qiugang on 2014/9/22.
@@ -44,9 +46,9 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private ListView listView;
+    private ListView mListView;
 
-    private View mEmptyView;
+    private View emptyView;
 
     private QuestionnairesAdapter mAdapter;
 
@@ -56,7 +58,7 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
 
     private List<QuestionnaireResponse> questionnaires = new ArrayList<QuestionnaireResponse>();
 
-    public QuestionnairesFragment() {};
+    public int errorTime = 1;
 
     public static QuestionnairesFragment newInstance() {
         QuestionnairesFragment fragment = new QuestionnairesFragment();
@@ -69,16 +71,17 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
 
         View rootView = inflater.inflate(R.layout.fragment_questionnaires, container, false);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.questionnaires_swipeRefresh);
-        listView = (ListView) rootView.findViewById(R.id.questionnaires_listView);
-        mEmptyView = rootView.findViewById(R.id.progress_fragment_qustionnaires);
+        mListView = (ListView) rootView.findViewById(R.id.questionnaires_listView);
+        emptyView = rootView.findViewById(R.id.progress_fragment_qustionnaires);
         swipeRefreshLayout.setColorScheme(R.color.swipe_color_1, R.color.swipe_color_2, R.color.swipe_color_3,
                 R.color.swipe_color_4);
-
         swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setRefreshing(true);
         mAdapter = new QuestionnairesAdapter(getActivity(), questionnaires);
-        listView.setEmptyView(mEmptyView);
-        listView.setAdapter(mAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView.setAdapter(mAdapter);
+        mListView.setEmptyView(emptyView);
+        mListView.addFooterView(new CompleteView(getActivity()).getmCompleteView());
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (!questionnaires.get(i).getDone()) {
@@ -94,20 +97,22 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
                 }
             }
         });
+
+        //Set ListView animation
         AnimationAdapter animationAdapter = new ItemAnimationAdapter(mAdapter);
-        animationAdapter.setAbsListView(listView);
+        animationAdapter.setAbsListView(mListView);
         animationAdapter.getViewAnimator().setAnimationDelayMillis(35);
         animationAdapter.getViewAnimator().setAnimationDurationMillis(getResources().getInteger(android.R.integer.config_mediumAnimTime));
-        listView.setAdapter(animationAdapter);
-        loadData();
+        mListView.setAdapter(animationAdapter);
+        loadData(Api.HOSTS[Api.HOST_POSITION]);
         return rootView;
     }
 
 
-    private void loadData() {
+    private void loadData(String host) {
         swipeRefreshLayout.setRefreshing(true);
         if (ToolUtils.isConnectInternet()) {
-            executeRequest(new MyStringRequest(Request.Method.GET, Api.Host_ALIYUN + "news/" + UserUtils
+            executeRequest(new MyStringRequest(Request.Method.GET, host + Api.NEWS + UserUtils
                     .getUserId(), responseListener(), errorListener()));
         } else {
             loadCache();
@@ -125,13 +130,12 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
                 questionnaires.add(q);
             }
             mAdapter.notifyDataSetChanged();
-
             swipeRefreshLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     swipeRefreshLayout.setRefreshing(false);
                 }
-            },3000);
+            }, 3000);
         }
         ToastUtils.showShort("网络未连接，不能捡肥皂");
     }
@@ -147,7 +151,7 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
                     protected Object doInBackground(Object... params) {
                         Log.d("String response data _->", response);
                         try {
-                            //联接联通网络未登录产生异常
+                            //连接接联通wifi未登录产生异常
                             temple = gson.fromJson(response, listType);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -185,21 +189,44 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                swipeRefreshLayout.setRefreshing(false);
+                if (error != null) {
+                    if (errorTime <= Api.HOSTS.length) {
+                        if (errorTime == Api.HOSTS.length) {
+                            RequestManager.cancelAll(this);
+                            swipeRefreshLayout.setRefreshing(false);
+                            ToastUtils.showShort("oh my god,服务器都挂了");
+                            loadCache();
+                        } else {
+                            if (Api.HOST_POSITION <= Api.HOSTS.length - 1 && questionnaires.size() == 0) {
+                                Api.HOST_POSITION++;
+                            }
+                            if (Api.HOST_POSITION == Api.HOSTS.length) {
+                                Api.HOST_POSITION = 0;
+                            }
+                            loadData(Api.HOSTS[Api.HOST_POSITION]);
+                        }
+                    }
+                }
             }
         };
     }
 
     @Override
     public void onRefresh() {
-        loadData();
+        loadData(Api.HOSTS[Api.HOST_POSITION]);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        errorTime = 1;
     }
 
     @Override
     public void onStart() {
         super.onStart();
         questionnaires.clear();
-        loadData();
+        loadData(Api.HOSTS[Api.HOST_POSITION]);
         mAdapter.notifyDataSetChanged();
     }
 }

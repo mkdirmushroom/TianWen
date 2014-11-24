@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 20
     buildToolsVersion "20.0.0"
 
     defaultConfig {
         applicationId "me.jeremy.ccst"
         minSdkVersion 16
-        targetSdkVersion 21
+        targetSdkVersion 20
         versionCode 1
-        versionName "1.9.0"
+        versionName "1.0.0"
     }
     buildTypes {
         release {
@@ -17,14 +17,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-//    packagingOptions {
-//        exclude 'META-INF/DEPENDENCIES'
-//        exclude 'META-INF/NOTICE'
-//        exclude 'META-INF/LICENSE'
-//        exclude 'META-INF/LICENSE.txt'
-//        exclude 'META-INF/NOTICE.txt'
-//        exclude 'META-INF/ASL2.0'
-//    }
+
 }
 
 dependencies {
@@ -32,8 +25,8 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.easing:library:1.0.0@aar'
     compile 'com.daimajia.androidanimations:library:1.1.2@aar'
-    compile 'com.android.support:support-v4:21.0.0+'
-    compile 'com.android.support:appcompat-v7:21.0.0+'
+    compile 'com.android.support:support-v4:20.0.0+'
+//    compile 'com.android.support:appcompat-v7:21.0.0+'
     compile 'com.etsy.android.grid:library:+'
     compile 'com.nhaarman.listviewanimations:lib-core:3.0.+'
     compile 'com.nhaarman.listviewanimations:lib-manipulation:3.0.+'

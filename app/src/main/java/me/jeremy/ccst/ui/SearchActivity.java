@@ -63,7 +63,7 @@ public class SearchActivity extends BaseActivity {
 
     private JSONObject jsonObject;
 
-    /*
+    /**
     Page flags
      */
     private int page = 1;
@@ -96,7 +96,6 @@ public class SearchActivity extends BaseActivity {
                 if (questionnaireResponses.get(i).getDone()) {
                     Intent intent = new Intent(SearchActivity.this, QuestionPager.class);
                     intent.putExtra("QuestionnaireId", questionnaireResponses.get(i).getId() + "");
-                    questionnaireResponses.clear();
                     startActivity(intent);
                 } else {
                     ToastUtils.showShort("已经做过啦");
@@ -111,6 +110,7 @@ public class SearchActivity extends BaseActivity {
 
         bindListView();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search, menu);
@@ -119,7 +119,7 @@ public class SearchActivity extends BaseActivity {
         searchView.setIconified(false);
         searchView.setQueryHint("关键字或编号");
 
-       //Change the SearchView style
+        //Change the SearchView style
         int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_plate", null, null);
         View searchPlate = searchView.findViewById(searchPlateId);
         if (searchPlate != null) {
@@ -230,8 +230,11 @@ public class SearchActivity extends BaseActivity {
     }
 
     private void loadData(final int page) {
-        executeRequest(new GsonRequest<PageModel>(Api.Host_ALIYUN + "questionnaires/" +
-                Api.getApiParams(UserUtils.getUserId(), page, 10), jsonObject, PageModel.class, responseListener(),
+        executeRequest(new GsonRequest<PageModel>(Api.Host_ALIYUN + Api.QUESTIONARIES +
+                Api.getApiParams(UserUtils.getUserId(), page, 10),
+                jsonObject,
+                PageModel.class,
+                responseListener(),
                 searchErrorListener()));
     }
 
@@ -285,10 +288,17 @@ public class SearchActivity extends BaseActivity {
 //                if (error.networkResponse.statusCode == 500) {
 //                    ToastUtils.showShort("搜索条件选错了哦");
 //                } else {
-                    ToastUtils.showShort("网络错误，请检查你的网络连接");
+                ToastUtils.showShort("网络错误，请检查你的网络连接");
 //                }
             }
         };
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        questionnaireResponses.clear();
+        mAdapter.notifyDataSetChanged();
+        loadFirstPage();
+    }
 }

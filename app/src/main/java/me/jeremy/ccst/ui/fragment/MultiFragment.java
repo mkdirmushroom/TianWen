@@ -1,5 +1,6 @@
 package me.jeremy.ccst.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -42,13 +43,15 @@ public class MultiFragment extends Fragment {
 
     public MultiFragment(){}
 
+    @SuppressLint("ValidFragment")
     public MultiFragment(QuestionResponse response, int num) {
         this.questionResponse = response;
         this.number = num;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_single, container, false);
         chooseResponses = questionResponse.getChoose();
@@ -83,7 +86,8 @@ public class MultiFragment extends Fragment {
         public View getView(final int position, View convertView, ViewGroup viewGroup) {
             final Integer chooseId = chooseResponses.get(position).getId();
             convertView = LayoutInflater.from(App.getContext()).inflate(R.layout.item_choose, null);
-            final CheckedTextView checkedTextView = (CheckedTextView) convertView.findViewById(R.id.item_choose_text);
+            final CheckedTextView checkedTextView = (CheckedTextView) convertView.findViewById(
+                    R.id.item_choose_text);
             checkedTextView.setText(chooseResponses.get(position).getDetail());
             if (null != Records.getDataCenter().get(questionResponse.getId())) {
                 records = Records.getDataCenter().get(questionResponse.getId());
@@ -118,7 +122,8 @@ public class MultiFragment extends Fragment {
 
     private void saveData() {
         Records.getDataCenter().put(questionResponse.getId(), records);
-        Log.d("the" + questionResponse.getId() +"'s choose id", Records.getDataCenter().get(questionResponse.getId()).toString());
+        Log.d("the" + questionResponse.getId() +"'s choose id",
+                Records.getDataCenter().get(questionResponse.getId()).toString());
     }
 
 

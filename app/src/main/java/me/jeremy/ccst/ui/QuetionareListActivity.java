@@ -1,10 +1,8 @@
 package me.jeremy.ccst.ui;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.Menu;
@@ -49,8 +47,6 @@ public class QuetionareListActivity extends BaseActivity implements SwipeRefresh
 
     private ListView mListView;
 
-    private ProgressDialog mProgressDialog;
-
     private LoadingFooter mLoadingFooter;
 
     private QuestionnairesAdapter mAdapter;
@@ -91,7 +87,8 @@ public class QuetionareListActivity extends BaseActivity implements SwipeRefresh
                     startActivity(intent);
                     if (!UserUtils.isHaveToast()) {
                         ToastUtils.showShort("左右滑动切换问题哦");
-                        App.getContext().getSharedPreferences("user", 0).edit().putInt("haveOpen", 1).commit();
+                        App.getContext().getSharedPreferences("user", 0).edit().putInt("haveOpen", 1)
+                                .commit();
                     }
                 }
             }
@@ -103,7 +100,8 @@ public class QuetionareListActivity extends BaseActivity implements SwipeRefresh
         AnimationAdapter animationAdapter = new ItemAnimationAdapter(mAdapter);
         animationAdapter.setAbsListView(mListView);
         animationAdapter.getViewAnimator().setAnimationDelayMillis(30);
-        animationAdapter.getViewAnimator().setAnimationDurationMillis(getResources().getInteger(android.R.integer.config_mediumAnimTime));
+        animationAdapter.getViewAnimator().setAnimationDurationMillis(
+                getResources().getInteger(android.R.integer.config_mediumAnimTime));
         mListView.setAdapter(animationAdapter);
         bindListView();
         loadFirstData();
@@ -124,7 +122,7 @@ public class QuetionareListActivity extends BaseActivity implements SwipeRefresh
         if (ToolUtils.isConnectInternet()) {
             if (UserUtils.logined(this)) {
                 executeRequest(new MyStringRequest(Request.Method.GET,
-                        Api.Host_ALIYUN + "CategoryQnSearch/" + Api.getApiParams(UserUtils.getUserId(), categoryId, page, 10),
+                        Api.HOSTS[Api.HOST_POSITION] + Api.CATEGORY + Api.getApiParams(UserUtils.getUserId(), categoryId, page, 10),
                         responseListener(), errorListener()));
             } else {
                 ToastUtils.showShort("没有登录哦");

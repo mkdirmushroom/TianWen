@@ -1,6 +1,7 @@
 package me.jeremy.ccst.ui.fragment;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -28,6 +29,10 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
 
     public static final String PREF_SIGNOUT = "pref_signOut";
 
+    public static final String PREF_FEEDBACK = "pref_feedback";
+
+    public static final String PREF_VERSION = "pref_version";
+
     private boolean logined = false;
 
     public static SettingFragment newInstance() {
@@ -51,10 +56,12 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
                 logined = true;
             }
         }
+        findPreference(PREF_VERSION).setSummary(ToolUtils.getAppVersion(getActivity()));
         findPreference(PREF_LOGIN).setOnPreferenceClickListener(this);
         findPreference(PREF_DELETE_CACHE).setOnPreferenceClickListener(this);
         findPreference(PREF_ABOUT).setOnPreferenceClickListener(this);
         findPreference(PREF_SIGNOUT).setOnPreferenceClickListener(this);
+        findPreference(PREF_FEEDBACK).setOnPreferenceClickListener(this);
     }
 
     @Override
@@ -97,6 +104,17 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
                 });
                 mMaterialDialog.show();
             }
+            return true;
+        } else if (preference.getKey().equals(PREF_FEEDBACK)) {
+            Intent mIntent = new Intent(Intent.ACTION_SENDTO);
+            mIntent.setData(Uri.parse("mailto:thisisqg@gmail.com"));
+            mIntent.putExtra(Intent.EXTRA_SUBJECT,"#TianWen意见反馈#" +
+                    android.os.Build.MODEL+ ";" +
+                    android.os.Build.VERSION.SDK +";"+
+                    ToolUtils.getAppVersion(getActivity()));
+            mIntent.putExtra(Intent.EXTRA_TEXT,"感谢您的反馈！\n");
+            startActivity(mIntent);
+
             return true;
         } else {
             return false;

@@ -37,6 +37,8 @@ public class EditProfileActivity extends BaseActivity {
 
     private static final String QQ = "qq";
 
+    private static final String PHONE ="phone";
+
     private String type = null;
 
     private EditText mEditText;
@@ -63,6 +65,8 @@ public class EditProfileActivity extends BaseActivity {
             mActionBar.setTitle("修改邮箱");
         } else if (QQ.equals(type)) {
             mActionBar.setTitle("修改QQ");
+        } else {
+            mActionBar.setTitle("修改电话");
         }
     }
 
@@ -97,11 +101,13 @@ public class EditProfileActivity extends BaseActivity {
             userInfoResponse.setEmail(editData);
         } else if (QQ.equals(type)) {
             userInfoResponse.setQq(editData);
+        } else {
+            userInfoResponse.setPhone(editData);
         }
         userModifyRequest.setQq(userInfoResponse.getQq());
         userModifyRequest.setEmail(userInfoResponse.getEmail());
         userModifyRequest.setId(userInfoResponse.getId());
-        userModifyRequest.setPhone("");
+        userModifyRequest.setPhone(userInfoResponse.getPhone());
 
         String params = new Gson().toJson(userModifyRequest);
         Log.d("update userinfo data", params);

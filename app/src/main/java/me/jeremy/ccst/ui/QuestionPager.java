@@ -39,6 +39,9 @@ import me.jeremy.ccst.model.question.CreateAnswerSheetRequest;
 import me.jeremy.ccst.model.question.CreateQuestionAnswer;
 import me.jeremy.ccst.model.question.QuestionResponse;
 import me.jeremy.ccst.model.question.QuestionnaireDetailResponse;
+import me.jeremy.ccst.transforms.RotateDownTransformer;
+import me.jeremy.ccst.transforms.StackTransformer;
+import me.jeremy.ccst.transforms.ZoomOutTranformer;
 import me.jeremy.ccst.ui.fragment.FiledFragment;
 import me.jeremy.ccst.ui.fragment.MultiFragment;
 import me.jeremy.ccst.ui.fragment.SingleFragment;
@@ -113,8 +116,11 @@ public class QuestionPager extends FragmentActivity {
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
+//        mPager.setPageTransformer(true,new FlipHorizontalTransformer());
+        mPager.setPageTransformer(true,new RotateDownTransformer());
         progressDialog = new ProgressDialog(this);
         loadInitialData();
+
     }
 
     private void loadInitialData() {
@@ -282,13 +288,17 @@ public class QuestionPager extends FragmentActivity {
                     protected void onPostExecute(Object o) {
                         super.onPostExecute(o);
                         progressDialog.dismiss();
-                        questions.clear();
-                        for (QuestionResponse q : temple.getQuestions()) {
-                            questions.add(q);
+                        if (temple != null) {
+                            questions.clear();
+                            for (QuestionResponse q : temple.getQuestions()) {
+                                questions.add(q);
+                            }
+                            maxPosition = questions.size() - 1;
+                            mPagerAdapter.notifyDataSetChanged();
+                            mActionBar.setTitle(ParamsUtils.getQuestionNums(questions.size()));
+                        } else {
+                            ToastUtils.showShort("当前网络信号不好哦");
                         }
-                        maxPosition = questions.size() - 1;
-                        mPagerAdapter.notifyDataSetChanged();
-                        mActionBar.setTitle(ParamsUtils.getQuestionNums(questions.size()));
                     }
                 });
             }

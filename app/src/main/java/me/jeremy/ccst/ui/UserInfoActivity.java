@@ -20,13 +20,12 @@ import me.jeremy.ccst.utils.UserUtils;
  */
 public class UserInfoActivity extends BaseActivity implements View.OnClickListener {
 
-    private RelativeLayout nameLayout;
-    private RelativeLayout idLayout;
+    private RelativeLayout phoneLayout;
     private RelativeLayout qqLayout;
     private RelativeLayout emailLayout;
 
     private TextView userName;
-    private TextView studentId;
+    private TextView phone;
     private TextView qq;
     private TextView eMail;
 
@@ -48,35 +47,39 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initView() {
-        nameLayout = (RelativeLayout) findViewById(R.id.layout_name);
-        idLayout = (RelativeLayout) findViewById(R.id.layout_id);
+        phoneLayout = (RelativeLayout) findViewById(R.id.layout_phone);
         qqLayout = (RelativeLayout) findViewById(R.id.layout_qq);
         emailLayout = (RelativeLayout) findViewById(R.id.layout_email);
 
         userName = (TextView) findViewById(R.id.tv_center_userName);
-        studentId = (TextView) findViewById(R.id.tv_center_studentId);
         qq = (TextView) findViewById(R.id.tv_center_qq);
         eMail = (TextView) findViewById(R.id.tv_center_email);
+        phone = (TextView) findViewById(R.id.tv_center_phone);
 
-        idLayout.setClickable(false);
         qqLayout.setOnClickListener(this);
         emailLayout.setOnClickListener(this);
+        phoneLayout.setOnClickListener(this);
     }
 
     private void initViewData() {
         userInfoResponse = UserUtils.getUserInfoResponse();
         userName.setText(userInfoResponse.getUserName());
-        studentId.setText(userInfoResponse.getStudentCode() + "");
         if (!TextUtils.isEmpty(userInfoResponse.getQq())) {
             qq.setText(userInfoResponse.getQq());
         } else {
             qq.setText("未填写");
         }
 
-        if (!TextUtils.isEmpty(userInfoResponse.getQq())) {
+        if (!TextUtils.isEmpty(userInfoResponse.getEmail())) {
             eMail.setText(userInfoResponse.getEmail());
         } else {
             eMail.setText("未填写");
+        }
+
+        if (!TextUtils.isEmpty(userInfoResponse.getPhone())) {
+            phone.setText(userInfoResponse.getPhone());
+        } else {
+            phone.setText("未填写");
         }
     }
 
@@ -92,6 +95,10 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
             case R.id.layout_qq:
                 args.putString("type", "qq");
                 args.putString("value", userInfoResponse.getQq());
+                break;
+            case R.id.layout_phone:
+                args.putString("type", "phone");
+                args.putString("value", userInfoResponse.getPhone());
                 break;
         }
         mIntent.putExtras(args);

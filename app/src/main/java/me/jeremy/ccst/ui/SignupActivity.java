@@ -94,9 +94,7 @@ public class SignupActivity extends BaseActivity {
                                 studentId, Boolean.class, idResponseListener(), errorListener()));
                     }
                 }
-
             }
-
         });
 
 
@@ -219,7 +217,7 @@ public class SignupActivity extends BaseActivity {
     }
 
     private boolean checkLength(String string) {
-        if (string.length() < 7) {
+        if (string.length() < 6) {
             return false;
         } else {
             return true;

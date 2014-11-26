@@ -282,13 +282,17 @@ public class QuestionPager extends FragmentActivity {
                     protected void onPostExecute(Object o) {
                         super.onPostExecute(o);
                         progressDialog.dismiss();
-                        questions.clear();
-                        for (QuestionResponse q : temple.getQuestions()) {
-                            questions.add(q);
+                        if (temple != null) {
+                            questions.clear();
+                            for (QuestionResponse q : temple.getQuestions()) {
+                                questions.add(q);
+                            }
+                            maxPosition = questions.size() - 1;
+                            mPagerAdapter.notifyDataSetChanged();
+                            mActionBar.setTitle(ParamsUtils.getQuestionNums(questions.size()));
+                        } else {
+                            ToastUtils.showShort("当前网络信号不好哦");
                         }
-                        maxPosition = questions.size() - 1;
-                        mPagerAdapter.notifyDataSetChanged();
-                        mActionBar.setTitle(ParamsUtils.getQuestionNums(questions.size()));
                     }
                 });
             }

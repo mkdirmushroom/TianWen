@@ -7,6 +7,8 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.view.View;
 
+import java.io.File;
+
 import me.drakeet.materialdialog.MaterialDialog;
 import me.jeremy.ccst.R;
 import me.jeremy.ccst.ui.AboutActivity;
@@ -75,7 +77,8 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
             }
             return true;
         } else if (preference.getKey().equals(PREF_DELETE_CACHE)) {
-            ToolUtils.deleteFilesByDirectory(getActivity().getCacheDir());
+            ToolUtils.deleteFilesByDirectory(new File("/data/data/me.jeremy.ccst/cache/volley"));
+            UserUtils.getUserSharedPreference().edit().remove("news").apply();
             ToastUtils.showShort("已经清理啦，么么哒");
             return true;
         } else if (preference.getKey().equals(PREF_ABOUT)) {
@@ -123,11 +126,8 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
 
     private void logout() {
         UserUtils.getUserSharedPreference().edit()
-                .remove("id")
-                .remove("username")
-                .remove("userInfo")
-                .remove("haveOpen")
-                .commit();
+                .clear()
+                .apply();
         logined = false;
         findPreference(PREF_LOGIN).setTitle(getString(R.string.title_login));
         findPreference(PREF_SIGNOUT).setEnabled(false);

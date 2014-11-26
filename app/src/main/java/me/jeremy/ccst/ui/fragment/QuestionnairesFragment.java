@@ -137,7 +137,7 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
                 }
             }, 3000);
         }
-        ToastUtils.showShort("网络未连接，不能捡肥皂");
+        ToastUtils.showShort("网络环境差，不能捡肥皂");
     }
 
 
@@ -162,20 +162,24 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
                     @Override
                     protected void onPostExecute(Object o) {
                         super.onPostExecute(o);
-                        if (temple.size() != 0) {
-                            UserUtils.cacheData("news", response);
-                            questionnaires.clear();
-                            for (QuestionnaireResponse q : temple) {
-                                questionnaires.add(q);
-                            }
-                            mAdapter.notifyDataSetChanged();
-
-                            swipeRefreshLayout.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    swipeRefreshLayout.setRefreshing(false);
+                        if (temple != null) {
+                            if (temple.size() != 0) {
+                                UserUtils.cacheData("news", response);
+                                questionnaires.clear();
+                                for (QuestionnaireResponse q : temple) {
+                                    questionnaires.add(q);
                                 }
-                            }, 3000);
+                                mAdapter.notifyDataSetChanged();
+
+                                swipeRefreshLayout.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        swipeRefreshLayout.setRefreshing(false);
+                                    }
+                                }, 3000);
+                            } else {
+                                loadCache();
+                            }
                         } else {
                             loadCache();
                         }
@@ -189,7 +193,6 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (error != null) {
                     if (errorTime <= Api.HOSTS.length) {
                         if (errorTime == Api.HOSTS.length) {
                             RequestManager.cancelAll(this);
@@ -207,7 +210,6 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
                         }
                     }
                 }
-            }
         };
     }
 

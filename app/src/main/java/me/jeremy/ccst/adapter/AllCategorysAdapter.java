@@ -60,5 +60,4 @@ public class AllCategorysAdapter  extends BaseAdapter {
         viewHolder.title.setText(mData.get(position).getName());
         return convertView;
     }
-
 }

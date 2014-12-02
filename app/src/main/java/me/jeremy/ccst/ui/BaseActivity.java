@@ -1,9 +1,7 @@
 package me.jeremy.ccst.ui;
 
-import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.ViewGroup;
@@ -11,7 +9,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;

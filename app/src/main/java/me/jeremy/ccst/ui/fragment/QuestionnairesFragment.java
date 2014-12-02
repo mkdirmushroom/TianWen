@@ -221,7 +221,7 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
     @Override
     public void onPause() {
         super.onPause();
-        errorTime = 1;
+//        errorTime = 1;
     }
 
     @Override

@@ -288,7 +288,7 @@ public class SearchActivity extends BaseActivity {
 //                if (error.networkResponse.statusCode == 500) {
 //                    ToastUtils.showShort("搜索条件选错了哦");
 //                } else {
-                ToastUtils.showShort("网络错误，请检查你的网络连接");
+                ToastUtils.showShort(R.string.network_environment_error);
 //                }
             }
         };

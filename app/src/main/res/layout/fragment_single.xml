@@ -26,6 +26,7 @@
             android:padding="10dp"
             android:id="@+id/single_listview"
             android:dividerHeight="1dp"
+            android:divider="@android:color/transparent"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"/>
     </LinearLayout>

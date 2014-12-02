@@ -17,7 +17,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="9"
             android:background="@drawable/edit_text"
-            android:hint="用户名"
+            android:hint="用户名6-11位哦"
+            android:inputType="text"
             android:paddingTop="20dp"
             android:singleLine="true" />
 
@@ -48,17 +49,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edit_text"
-            android:hint="密码"
-            android:inputType="text"
+            android:hint="密码6-16位哦"
+            android:inputType="textPassword"
             android:paddingTop="20dp"
             android:singleLine="true" />
 
         <TextView
+            android:id="@+id/signup_tv_notice_passWord"
             style="@style/NoticeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <Button
+            android:layout_marginTop="16dp"
             android:id="@+id/signup_bu_submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

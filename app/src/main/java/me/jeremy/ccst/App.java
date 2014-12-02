@@ -2,7 +2,6 @@ package me.jeremy.ccst;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.Build;
 
 import me.jeremy.ccst.data.RequestManager;
 

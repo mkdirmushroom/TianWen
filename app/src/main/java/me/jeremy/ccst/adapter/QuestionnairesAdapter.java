@@ -1,8 +1,6 @@
 package me.jeremy.ccst.adapter;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.Random;
 
 import me.jeremy.ccst.App;
 import me.jeremy.ccst.R;
@@ -81,11 +78,12 @@ public class QuestionnairesAdapter extends BaseAdapter {
         viewHolder.shot.setText(topic.substring(0,1) +"");
         viewHolder.shot.setBackgroundColor(mContext.getResources().getColor(
                 ParamsUtils.colors[data.get(position).getId()%10]));
-        if (topic.length() > 16) {
-            viewHolder.topic.setText(topic.substring(0,16) + "...");
+        if (topic.length() > 18) {
+            viewHolder.topic.setText(topic.substring(0,18) + "...");
         } else {
             viewHolder.topic.setText(topic);
         }
+
 
         viewHolder.date.setText(ParamsUtils.getCreateTime(data.get(position).getDate().toString()));
         return convertView;

@@ -9,11 +9,11 @@ public class Api {
 
     public static String Host_LOCAL = "http://192.168.112.122:8080/tianwen/";
 
-    public static String Host_ALIYUN = "http://115.29.208.66:8080/tianwen/";
+    public static String Host_ALIYUN = "http://123.56.86.57:8080/tianwen/";
 
     public static String Host_ALIYUN_SLAVE = "http://115.29.208.47:8080/tianwen/";
 
-    public static String[] HOSTS = {Host_ALIYUN, Host_ALIYUN_SLAVE};
+    public static String[] HOSTS = {Host_ALIYUN};
 
     public static int HOST_POSITION = 0;
 

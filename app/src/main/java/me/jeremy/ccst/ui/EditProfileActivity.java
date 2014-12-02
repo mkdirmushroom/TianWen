@@ -33,6 +33,10 @@ import me.jeremy.ccst.utils.UserUtils;
  */
 public class EditProfileActivity extends BaseActivity {
 
+    private UserInfoResponse userInfoResponse;
+
+    private UserModifyRequest userModifyRequest;
+
     private static final String EMAIL = "email";
 
     private static final String QQ = "qq";
@@ -94,14 +98,14 @@ public class EditProfileActivity extends BaseActivity {
     }
 
     private void commitData() {
-        UserInfoResponse userInfoResponse = UserUtils.getUserInfoResponse();
-        UserModifyRequest userModifyRequest = new UserModifyRequest();
+        userInfoResponse = UserUtils.getUserInfoResponse();
+        userModifyRequest = new UserModifyRequest();
         JSONObject jsonObject = null;
         if (EMAIL.equals(type)) {
             userInfoResponse.setEmail(editData);
         } else if (QQ.equals(type)) {
             userInfoResponse.setQq(editData);
-        } else {
+        } else if (PHONE.equals(type)){
             userInfoResponse.setPhone(editData);
         }
         userModifyRequest.setQq(userInfoResponse.getQq());
@@ -116,15 +120,12 @@ public class EditProfileActivity extends BaseActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        App.getContext().getSharedPreferences("user", 0).edit().remove("userInfo");
-        App.getContext().getSharedPreferences("user", 0).edit().putString("userInfo",
-                new Gson().toJson(userInfoResponse)).commit();
         Log.d("saved data", new Gson().toJson(userInfoResponse));
         if (ToolUtils.isConnectInternet()) {
             executeRequest(new GsonRequest<UserInfoResponse>(Request.Method.PUT, Api.Host_ALIYUN + Api.UPDATEUSER,
                     jsonObject, UserInfoResponse.class, null, responseListener(), errorListener()));
         } else {
-            ToastUtils.showShort("网络未连接，不能捡肥皂");
+            ToastUtils.showShort(R.string.network_environment_error);
         }
     }
 
@@ -141,9 +142,12 @@ public class EditProfileActivity extends BaseActivity {
                     @Override
                     protected void onPostExecute(Object o) {
                         super.onPostExecute(o);
-                        Log.d("update userinfomation", new Gson().toJson(response));
+                        Log.d("update userInformation", new Gson().toJson(response));
                         if (response != null) {
                             ToastUtils.showShort("同步资料成功");
+                            App.getContext().getSharedPreferences("user", 0).edit().remove("userInfo");
+                            App.getContext().getSharedPreferences("user", 0).edit().putString("userInfo",
+                                    new Gson().toJson(userInfoResponse)).commit();
                             finish();
                         } else {
                             ToastUtils.showShort("同步资料失败");

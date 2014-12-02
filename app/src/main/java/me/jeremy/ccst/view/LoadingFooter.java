@@ -10,7 +10,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.jpardogo.android.googleprogressbar.library.FoldingCirclesDrawable;
-import com.jpardogo.android.googleprogressbar.library.GoogleMusicDicesDrawable;
 
 import me.jeremy.ccst.R;
 

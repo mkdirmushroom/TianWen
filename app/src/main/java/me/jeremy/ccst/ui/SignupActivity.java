@@ -24,6 +24,7 @@ import me.jeremy.ccst.data.GsonRequest;
 import me.jeremy.ccst.data.GsonRequestForString;
 import me.jeremy.ccst.model.user.UserInfoResponse;
 import me.jeremy.ccst.model.user.UserRegisterRequest;
+import me.jeremy.ccst.utils.StringUtils;
 import me.jeremy.ccst.utils.TaskUtils;
 import me.jeremy.ccst.utils.ToastUtils;
 import me.jeremy.ccst.utils.UserUtils;
@@ -39,7 +40,7 @@ public class SignupActivity extends BaseActivity {
 
     private EditText etPassWord;
 
-    private String name;
+    private String name = "";
 
     private String studentId;
 
@@ -53,6 +54,9 @@ public class SignupActivity extends BaseActivity {
 
     private TextView noticeId;
 
+    private TextView noticePassWd;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,21 +66,30 @@ public class SignupActivity extends BaseActivity {
         etName = (EditText) findViewById(R.id.signup_et_username);
         etStudentId = (EditText) findViewById(R.id.signup_et_studentid);
         etPassWord = (EditText) findViewById(R.id.signup_et_password);
+
         noticeName = (TextView) findViewById(R.id.signup_tv_notice_username);
         noticeId = (TextView) findViewById(R.id.signup_tv_notice_studentid);
+        noticePassWd = (TextView) findViewById(R.id.signup_tv_notice_passWord);
+
 
         etName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
 
                 if (!etName.hasFocus()) {
-                    name = etName.getText().toString().trim();
+                    name = etName.getText().toString();
+
+
+
+                    name = name.replaceAll("\\s*","");
+
+                    Log.d("name", name);
                     if (null != name) {
-                        if (checkLength(name)) {
+                        if (StringUtils.checkUserName(name)) {
                             executeRequest(new GsonRequestForString<Boolean>(Api.Host_ALIYUN + "checkuser",
                                     name, Boolean.class, nameResponseListener(), errorListener()));
                         } else {
-                            noticeName.setText("用户名至少六位字符哦亲");
+                            noticeName.setText("用户名6-11位哦");
                         }
                     }
                 }
@@ -89,6 +102,7 @@ public class SignupActivity extends BaseActivity {
 
                 if (!etStudentId.hasFocus()) {
                     studentId = etStudentId.getText().toString().trim();
+                    Log.d("studentID", studentId);
                     if (null != studentId) {
                         executeRequest(new GsonRequestForString<Boolean>(Api.Host_ALIYUN + "checkcode",
                                 studentId, Boolean.class, idResponseListener(), errorListener()));
@@ -102,7 +116,6 @@ public class SignupActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                name = etName.getText().toString().trim();
                 studentId = etStudentId.getText().toString().trim();
                 passWord = etPassWord.getText().toString().trim();
 
@@ -110,9 +123,10 @@ public class SignupActivity extends BaseActivity {
                     YoYo.with(Techniques.Tada)
                             .duration(700)
                             .playOn(findViewById(R.id.signup_edit_area));
-                    ToastUtils.showShort(" the information is not complete");
+                    ToastUtils.showShort("信息还没有填完哦");
+                } else if (passWord.length() < 6 || passWord.length() > 16) {
+                    noticePassWd.setText("密码6-16位哦");
                 } else {
-
                     userRegisterRequest.setUserName(name);
                     userRegisterRequest.setPassWord(passWord);
                     userRegisterRequest.setStudentCode(studentId);
@@ -150,7 +164,7 @@ public class SignupActivity extends BaseActivity {
                     protected void onPostExecute(Object o) {
                         super.onPostExecute(o);
                         if (false == response) {
-                            noticeName.setText("用户名不可用");
+                            noticeName.setText("用户名不可用哦");
                         } else {
                             noticeName.setText("用户名可用");
                         }
@@ -175,11 +189,10 @@ public class SignupActivity extends BaseActivity {
                     protected void onPostExecute(Object o) {
                         super.onPostExecute(o);
                         if (false == response) {
-                            noticeId.setText("学号不可用");
+                            noticeId.setText("学号不可用哦");
                         } else {
                             noticeId.setText("学号可用");
                         }
-
                     }
                 });
             }
@@ -214,14 +227,6 @@ public class SignupActivity extends BaseActivity {
                 });
             }
         };
-    }
-
-    private boolean checkLength(String string) {
-        if (string.length() < 6) {
-            return false;
-        } else {
-            return true;
-        }
     }
 
     @Override

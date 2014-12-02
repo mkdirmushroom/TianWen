@@ -39,9 +39,13 @@ import me.jeremy.ccst.model.question.CreateAnswerSheetRequest;
 import me.jeremy.ccst.model.question.CreateQuestionAnswer;
 import me.jeremy.ccst.model.question.QuestionResponse;
 import me.jeremy.ccst.model.question.QuestionnaireDetailResponse;
+import me.jeremy.ccst.transforms.AccordionTransformer;
+import me.jeremy.ccst.transforms.CubeOutTransformer;
+import me.jeremy.ccst.transforms.FlipHorizontalTransformer;
+import me.jeremy.ccst.transforms.ForegroundToBackgroundTransformer;
 import me.jeremy.ccst.transforms.RotateDownTransformer;
-import me.jeremy.ccst.transforms.StackTransformer;
-import me.jeremy.ccst.transforms.ZoomOutTranformer;
+import me.jeremy.ccst.transforms.RotateUpTransformer;
+import me.jeremy.ccst.transforms.ZoomOutSlideTransformer;
 import me.jeremy.ccst.ui.fragment.FiledFragment;
 import me.jeremy.ccst.ui.fragment.MultiFragment;
 import me.jeremy.ccst.ui.fragment.SingleFragment;
@@ -116,8 +120,8 @@ public class QuestionPager extends FragmentActivity {
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
-//        mPager.setPageTransformer(true,new FlipHorizontalTransformer());
-        mPager.setPageTransformer(true,new RotateDownTransformer());
+        mPager.setPageTransformer(true,new AccordionTransformer());
+//        mPager.setPageTransformer(true, new ZoomOutSlideTransformer());
         progressDialog = new ProgressDialog(this);
         loadInitialData();
 
@@ -132,7 +136,7 @@ public class QuestionPager extends FragmentActivity {
                     responseListener(), errorListener()));
         } else {
             progressDialog.dismiss();
-            ToastUtils.showShort("网络未连接，不能捡肥皂");
+            ToastUtils.showShort(R.string.network_environment_error);
         }
     }
 
@@ -268,7 +272,6 @@ public class QuestionPager extends FragmentActivity {
         return true;
     }
 
-
     private Response.Listener<String> responseListener() {
         return new Response.Listener<String>() {
             QuestionnaireDetailResponse temple;
@@ -296,8 +299,6 @@ public class QuestionPager extends FragmentActivity {
                             maxPosition = questions.size() - 1;
                             mPagerAdapter.notifyDataSetChanged();
                             mActionBar.setTitle(ParamsUtils.getQuestionNums(questions.size()));
-                        } else {
-                            ToastUtils.showShort("当前网络信号不好哦");
                         }
                     }
                 });
@@ -317,7 +318,7 @@ public class QuestionPager extends FragmentActivity {
 //                        firstGet = false;
 //                    } else {
                         progressDialog.dismiss();
-                        ToastUtils.showShort("当前网络信号不好哦");
+                        ToastUtils.showShort(R.string.network_environment_error);
 //                    }
                 }
             }
@@ -336,7 +337,7 @@ public class QuestionPager extends FragmentActivity {
 //                        firstPost = false;
 //                    } else {
                         progressDialog.dismiss();
-                        ToastUtils.showShort("当前网络信号不好哦");
+                        ToastUtils.showShort(R.string.network_environment_error);
 //                    }
                 }
             }
@@ -397,7 +398,7 @@ public class QuestionPager extends FragmentActivity {
                     initPostData();
                     postData();
                 } else {
-                    ToastUtils.showShort("网络未连接，不能扔肥皂");
+                    ToastUtils.showShort(R.string.network_environment_error);
                 }
             } else {
                 ToastUtils.showShort("没做完不能提交哦");

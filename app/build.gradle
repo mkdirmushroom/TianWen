@@ -26,7 +26,6 @@ dependencies {
     compile 'com.daimajia.easing:library:1.0.0@aar'
     compile 'com.daimajia.androidanimations:library:1.1.2@aar'
     compile 'com.android.support:support-v4:20.0.0+'
-    //    compile 'com.android.support:appcompat-v7:21.0.0+'
     compile 'com.etsy.android.grid:library:+'
     compile 'com.nhaarman.listviewanimations:lib-core:3.0.+'
     compile 'com.nhaarman.listviewanimations:lib-manipulation:3.0.+'

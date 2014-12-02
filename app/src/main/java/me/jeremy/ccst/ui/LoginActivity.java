@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -102,7 +100,7 @@ public class LoginActivity extends BaseActivity {
                             executeRequest(new GsonRequest<UserInfoResponse>(Api.Host_ALIYUN + "login",
                                     jsonObject, UserInfoResponse.class, responseListener(), errorListener()));
                         } else {
-                            ToastUtils.showShort("网络未连接，不能捡肥皂");
+                            ToastUtils.showShort(R.string.network_environment_error);
                         }
                     }
                 }
@@ -111,7 +109,6 @@ public class LoginActivity extends BaseActivity {
                 @Override
                 public void onClick(View view) {
                     startActivity(new Intent(LoginActivity.this, SignupActivity.class));
-                    finish();
                 }
             });
         }
@@ -151,15 +148,15 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressDialog.dismiss();
-                ToastUtils.showShort("wait for a moment");
-                if (error.networkResponse != null) {
-                    if (error.networkResponse.statusCode == 500) {
-                        Log.d("切换到备用服务器", "");
-                        executeRequest(new GsonRequest<UserInfoResponse>(Api.Host_ALIYUN_SLAVE + "login",
-                                jsonObject, UserInfoResponse.class, responseListener(), errorListener()));
-                    }
-                }
-               ToastUtils.showShort("网络错误，请检查你的网络连接");
+//                ToastUtils.showShort("wait for a moment");
+//                if (error.networkResponse != null) {
+//                    if (error.networkResponse.statusCode == 500) {
+//                        Log.d("切换到备用服务器", "");
+//                        executeRequest(new GsonRequest<UserInfoResponse>(Api.Host_ALIYUN_SLAVE + "login",
+//                                jsonObject, UserInfoResponse.class, responseListener(), errorListener()));
+//                    }
+//                }
+               ToastUtils.showShort(R.string.network_environment_error);
             }
         };
     }

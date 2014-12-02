@@ -128,7 +128,7 @@ public class QuetionareListActivity extends BaseActivity implements SwipeRefresh
                 ToastUtils.showShort("没有登录哦");
             }
         } else {
-            ToastUtils.showShort("网络未连接，不能捡肥皂");
+            ToastUtils.showShort(R.string.network_environment_error);
         }
 
     }

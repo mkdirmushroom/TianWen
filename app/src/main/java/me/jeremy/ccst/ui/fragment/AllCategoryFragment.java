@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.etsy.android.grid.StaggeredGridView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -25,11 +23,9 @@ import me.jeremy.ccst.R;
 import me.jeremy.ccst.adapter.AllCategorysAdapter;
 import me.jeremy.ccst.api.Api;
 import me.jeremy.ccst.data.MyStringRequest;
-import me.jeremy.ccst.data.RequestManager;
 import me.jeremy.ccst.model.CategoryResponse;
 import me.jeremy.ccst.ui.QuetionareListActivity;
 import me.jeremy.ccst.utils.TaskUtils;
-import me.jeremy.ccst.utils.ToastUtils;
 
 
 /**

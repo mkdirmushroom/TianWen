@@ -15,4 +15,16 @@ public class StringUtils {
         Matcher matcher = pattern.matcher((CharSequence) s);
         return matcher.matches();
     }
+
+
+    public static boolean checkUserName(String str) {
+       Pattern pattern = Pattern.compile("^[^\\u4e00-\\u9fa5]{6,11}$");
+       Matcher isRight = pattern.matcher(str);
+        if (!isRight.matches()) {
+            return false;
+        }
+        return true;
+
+    }
+
 }

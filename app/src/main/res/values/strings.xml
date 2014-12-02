@@ -20,5 +20,6 @@
     <string name="title_user">用户</string>
     <string name="title_delete">清空缓存</string>
     <string name="title_signOut">注销账户</string>
+    <string name="network_environment_error">当前网络环境不好哦</string>
 
 </resources>

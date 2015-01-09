@@ -169,6 +169,7 @@ public class QuestionnairesFragment extends BaseFragment implements SwipeRefresh
                                 for (QuestionnaireResponse q : temple) {
                                     questionnaires.add(q);
                                 }
+
                                 mAdapter.notifyDataSetChanged();
 
                                 swipeRefreshLayout.postDelayed(new Runnable() {

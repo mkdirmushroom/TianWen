@@ -78,11 +78,7 @@ public class SignupActivity extends BaseActivity {
 
                 if (!etName.hasFocus()) {
                     name = etName.getText().toString();
-
-
-
                     name = name.replaceAll("\\s*","");
-
                     Log.d("name", name);
                     if (null != name) {
                         if (StringUtils.checkUserName(name)) {
